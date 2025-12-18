@@ -1,4 +1,3 @@
-// components/tools/TabSpaceConverterClient.tsx
 "use client"
 
 import { useMemo, useState } from "react"
@@ -19,34 +18,58 @@ async function copyToClipboard(text: string) {
   document.body.removeChild(ta)
 }
 
-function makeSpaces(n: number) {
-  return " ".repeat(Math.max(0, Math.floor(n)))
+function tabToSpacesLine(line: string, tabWidth: number) {
+  let col = 0
+  let out = ""
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i]
+    if (ch === "\t") {
+      const add = tabWidth - (col % tabWidth)
+      out += " ".repeat(add)
+      col += add
+    } else {
+      out += ch
+      col += 1
+    }
+  }
+  return out
 }
 
-function tabsToSpaces(input: string, spacesPerTab: number) {
-  const spaces = makeSpaces(spacesPerTab)
-  return input.replace(/\t/g, spaces)
+// Convert ONLY leading indentation spaces to tabs (safer and expected for code)
+function leadingSpacesToTabsLine(line: string, tabWidth: number) {
+  let i = 0
+  while (i < line.length && line[i] === " ") i++
+  const indent = line.slice(0, i)
+  const rest = line.slice(i)
+
+  const tabs = Math.floor(indent.length / tabWidth)
+  const rem = indent.length % tabWidth
+  return "\t".repeat(tabs) + " ".repeat(rem) + rest
 }
 
-function spacesToTabs(input: string, spacesPerTab: number) {
-  const n = Math.max(1, Math.floor(spacesPerTab))
-  // Replace exact runs of N spaces with a tab.
-  // Do this repeatedly to handle long runs (e.g., 8 spaces with N=2 => 4 tabs).
-  const re = new RegExp(makeSpaces(n), "g")
-  return input.replace(re, "\t")
+function convert(input: string, mode: "tabToSpace" | "spaceToTab", tabWidth: number) {
+  const w = Math.max(1, Math.floor(tabWidth))
+  // Preserve original newlines (LF/CRLF) by splitting with capture
+  const parts = input.split(/(\r?\n)/)
+  for (let i = 0; i < parts.length; i++) {
+    const p = parts[i]
+    if (p === "\n" || p === "\r\n") continue
+    parts[i] =
+      mode === "tabToSpace" ? tabToSpacesLine(p, w) : leadingSpacesToTabsLine(p, w)
+  }
+  return parts.join("")
 }
 
 export default function TabSpaceConverterClient() {
   const [input, setInput] = useState("")
   const [mode, setMode] = useState<"tabToSpace" | "spaceToTab">("tabToSpace")
-  const [spacesPerTab, setSpacesPerTab] = useState<2 | 4 | 8>(4)
+  const [tabWidth, setTabWidth] = useState<2 | 4 | 8>(4)
   const [copyMsg, setCopyMsg] = useState<string | null>(null)
 
   const output = useMemo(() => {
     if (!input) return ""
-    if (mode === "tabToSpace") return tabsToSpaces(input, spacesPerTab)
-    return spacesToTabs(input, spacesPerTab)
-  }, [input, mode, spacesPerTab])
+    return convert(input, mode, tabWidth)
+  }, [input, mode, tabWidth])
 
   return (
     <section className="rounded-lg border border-neutral-200 bg-white p-4">
@@ -70,21 +93,21 @@ export default function TabSpaceConverterClient() {
               checked={mode === "spaceToTab"}
               onChange={() => setMode("spaceToTab")}
             />
-            スペース → タブ
+            スペース → タブ（先頭インデントのみ）
           </label>
 
           <div className="flex items-center gap-2">
-            <span className="text-sm text-neutral-700">幅</span>
+            <span>幅</span>
             <select
-              value={spacesPerTab}
-              onChange={(e) => setSpacesPerTab(Number(e.target.value) as 2 | 4 | 8)}
+              value={tabWidth}
+              onChange={(e) => setTabWidth(Number(e.target.value) as 2 | 4 | 8)}
               className="rounded-md border border-neutral-200 bg-white px-2 py-1 text-sm text-neutral-900 outline-none focus:ring-2 focus:ring-neutral-200"
             >
               <option value={2}>2</option>
               <option value={4}>4</option>
               <option value={8}>8</option>
             </select>
-            <span className="text-sm text-neutral-700">スペース</span>
+            <span>スペース</span>
           </div>
         </div>
       </div>
@@ -146,7 +169,7 @@ export default function TabSpaceConverterClient() {
       </div>
 
       <p className="mt-4 text-xs text-neutral-500">
-        タブをスペースに展開、または指定幅のスペースをタブに置換します。入力内容は保存されません。
+        タブは列位置に合わせてスペース展開します。スペース→タブは安全のため先頭インデントのみ変換します。入力内容は保存されません。
       </p>
     </section>
   )
