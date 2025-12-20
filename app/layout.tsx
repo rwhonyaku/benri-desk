@@ -2,6 +2,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import Link from "next/link"
+import Script from "next/script"
 import SiteFooter from "@/components/layout/SiteFooter"
 
 export const metadata: Metadata = {
@@ -38,14 +39,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <head>
-        {/* AdSense: Sitewide verification + ad script */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2711217631458410"
-          crossOrigin="anonymous"
-        />
-      </head>
+      {/* AdSense: sitewide verification + base script */}
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2711217631458410"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
 
       <body className="min-h-dvh bg-neutral-50 text-neutral-900">
         <header className="border-b border-neutral-200 bg-white">
