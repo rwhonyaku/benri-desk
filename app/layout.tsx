@@ -4,7 +4,6 @@ import "./globals.css"
 import Link from "next/link"
 import SiteFooter from "@/components/layout/SiteFooter"
 
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://benri-desk.com"),
   title: {
@@ -39,6 +38,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
+      <head>
+        {/* AdSense: Sitewide verification + ad script */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2711217631458410"
+          crossOrigin="anonymous"
+        />
+      </head>
+
       <body className="min-h-dvh bg-neutral-50 text-neutral-900">
         <header className="border-b border-neutral-200 bg-white">
           <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-4">
@@ -78,7 +86,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
         </footer>
-
       </body>
     </html>
   )
