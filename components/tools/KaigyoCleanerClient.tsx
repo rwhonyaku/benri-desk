@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react"
 
 function normalizeNewlines(s: string) {
-  // Convert CRLF/CR to LF for consistent processing
   return s.replace(/\r\n?/g, "\n")
 }
 
@@ -14,41 +13,16 @@ function applyKaigyoCleaner(
   let s = normalizeNewlines(input)
 
   if (opts.trimLineEnds) {
-    s = s
-      .split("\n")
-      .map((line) => line.replace(/[ \t]+$/g, ""))
-      .join("\n")
+    s = s.split("\n").map((line) => line.replace(/[ \t]+$/g, "")).join("\n")
   }
 
   if (opts.removeAllNewlines) {
-    // Remove all line breaks (common “改行削除” intent)
-    // Keep other whitespace as-is.
     s = s.replace(/\n/g, "")
   } else if (opts.collapseBlankLines) {
-    // Convert 2+ newlines to a single newline
     s = s.replace(/\n{2,}/g, "\n")
   }
 
   return s
-}
-
-async function copyToClipboard(text: string) {
-  // Primary: Clipboard API
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text)
-    return
-  }
-
-  // Fallback
-  const ta = document.createElement("textarea")
-  ta.value = text
-  ta.setAttribute("readonly", "true")
-  ta.style.position = "fixed"
-  ta.style.left = "-9999px"
-  document.body.appendChild(ta)
-  ta.select()
-  document.execCommand("copy")
-  document.body.removeChild(ta)
 }
 
 export default function KaigyoCleanerClient() {
@@ -59,142 +33,131 @@ export default function KaigyoCleanerClient() {
   const [copyMsg, setCopyMsg] = useState<string | null>(null)
 
   const output = useMemo(
-    () =>
-      applyKaigyoCleaner(input, {
-        removeAllNewlines,
-        collapseBlankLines,
-        trimLineEnds,
-      }),
+    () => applyKaigyoCleaner(input, { removeAllNewlines, collapseBlankLines, trimLineEnds }),
     [input, removeAllNewlines, collapseBlankLines, trimLineEnds]
   )
 
-  const inputStats = useMemo(() => {
-    const s = normalizeNewlines(input)
-    const lines = s.length === 0 ? 0 : s.split("\n").length
-    return { chars: input.length, lines }
-  }, [input])
+  const stats = useMemo(() => {
+    const getStats = (text: string) => {
+      const s = normalizeNewlines(text)
+      return {
+        chars: text.length,
+        lines: text.length === 0 ? 0 : s.split("\n").length
+      }
+    }
+    return { in: getStats(input), out: getStats(output) }
+  }, [input, output])
 
-  const outputStats = useMemo(() => {
-    const s = normalizeNewlines(output)
-    const lines = s.length === 0 ? 0 : s.split("\n").length
-    return { chars: output.length, lines }
-  }, [output])
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(output)
+      setCopyMsg("コピーしました！")
+    } catch {
+      setCopyMsg("失敗")
+    } finally {
+      setTimeout(() => setCopyMsg(null), 2000)
+    }
+  }
 
   return (
-    <section className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="text-sm font-medium text-neutral-900">オプション</div>
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-          <label className="flex items-center gap-2 text-sm text-neutral-700">
+    <div className="space-y-6">
+      {/* Options Panel */}
+      <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <div className="mb-4 text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">Cleaning Options</div>
+        <div className="flex flex-wrap gap-4">
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-2 transition-colors hover:bg-neutral-100">
             <input
               type="checkbox"
-              className="h-4 w-4"
+              className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
               checked={removeAllNewlines}
               onChange={(e) => {
-                const v = e.target.checked
-                setRemoveAllNewlines(v)
-                // Mutually exclusive with collapseBlankLines
-                if (v) setCollapseBlankLines(false)
+                setRemoveAllNewlines(e.target.checked)
+                if (e.target.checked) setCollapseBlankLines(false)
               }}
             />
-            改行をすべて削除する
+            <span className="text-sm font-medium text-neutral-700">改行をすべて削除</span>
           </label>
 
-          <label className="flex items-center gap-2 text-sm text-neutral-700">
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-2 transition-colors hover:bg-neutral-100">
             <input
               type="checkbox"
-              className="h-4 w-4"
+              className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
               checked={collapseBlankLines}
               onChange={(e) => {
-                const v = e.target.checked
-                setCollapseBlankLines(v)
-                // Mutually exclusive with removeAllNewlines
-                if (v) setRemoveAllNewlines(false)
+                setCollapseBlankLines(e.target.checked)
+                if (e.target.checked) setRemoveAllNewlines(false)
               }}
             />
-            空行（連続改行）を1行にまとめる
+            <span className="text-sm font-medium text-neutral-700">空行を1行に集約</span>
           </label>
 
-          <label className="flex items-center gap-2 text-sm text-neutral-700">
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-2 transition-colors hover:bg-neutral-100">
             <input
               type="checkbox"
-              className="h-4 w-4"
+              className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
               checked={trimLineEnds}
               onChange={(e) => setTrimLineEnds(e.target.checked)}
             />
-            行末の空白を削除
+            <span className="text-sm font-medium text-neutral-700">行末の空白を削除</span>
           </label>
         </div>
       </div>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <div>
-          <div className="flex items-baseline justify-between">
-            <div className="text-sm font-medium text-neutral-900">入力</div>
-            <div className="text-xs text-neutral-500">
-              {inputStats.chars.toLocaleString()} 文字 / {inputStats.lines.toLocaleString()} 行
+      {/* Workspace */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Input */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-sm font-bold text-neutral-800">入力</span>
+            <div className="flex gap-2">
+              <span className="rounded bg-neutral-100 px-2 py-0.5 text-[10px] font-bold text-neutral-500">
+                {stats.in.chars}文字 / {stats.in.lines}行
+              </span>
+              <button onClick={() => setInput("")} className="text-[10px] font-bold text-rose-500 hover:underline">Clear</button>
             </div>
           </div>
           <textarea
-            className="mt-2 h-56 w-full rounded-md border border-neutral-200 bg-white p-3 text-sm leading-6 text-neutral-900 outline-none focus:ring-2 focus:ring-neutral-200"
+            className="h-80 w-full rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-800 outline-none transition-all focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="ここにテキストを貼り付けてください。"
+            placeholder="テキストをここに入力または貼り付け..."
             spellCheck={false}
           />
-          <div className="mt-2 flex gap-2">
-            <button
-              type="button"
-              className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-              onClick={() => setInput("")}
-            >
-              クリア
-            </button>
-          </div>
         </div>
 
-        <div>
-          <div className="flex items-baseline justify-between">
-            <div className="text-sm font-medium text-neutral-900">出力</div>
-            <div className="text-xs text-neutral-500">
-              {outputStats.chars.toLocaleString()} 文字 / {outputStats.lines.toLocaleString()} 行
-            </div>
+        {/* Output */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-sm font-bold text-neutral-800">出力結果</span>
+            <span className="rounded bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
+              {stats.out.chars}文字 / {stats.out.lines}行
+            </span>
           </div>
-
-          <textarea
-            className="mt-2 h-56 w-full rounded-md border border-neutral-200 bg-neutral-50 p-3 text-sm leading-6 text-neutral-900 outline-none"
-            value={output}
-            readOnly
-            spellCheck={false}
-          />
-
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-              onClick={async () => {
-                try {
-                  await copyToClipboard(output)
-                  setCopyMsg("コピーしました")
-                } catch {
-                  setCopyMsg("コピーに失敗しました")
-                } finally {
-                  window.setTimeout(() => setCopyMsg(null), 1500)
-                }
-              }}
-              disabled={output.length === 0}
-            >
-              コピー
-            </button>
-
-            {copyMsg && <span className="text-sm text-neutral-600">{copyMsg}</span>}
+          <div className="relative group">
+            <textarea
+              className="h-80 w-full rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-600 outline-none resize-none"
+              value={output}
+              readOnly
+              spellCheck={false}
+            />
+            {output && (
+              <div className="absolute bottom-4 right-4 flex items-center gap-2">
+                {copyMsg && <span className="text-xs font-bold text-emerald-600 animate-fade-in">{copyMsg}</span>}
+                <button
+                  onClick={handleCopy}
+                  className="rounded-lg bg-neutral-900 px-4 py-2 text-xs font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+                >
+                  結果をコピー
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      <p className="mt-4 text-xs text-neutral-500">
-        入力内容は保存されません。処理はこのブラウザ内で完結します。
-      </p>
-    </section>
+      <div className="rounded-lg bg-blue-50/50 p-4 text-[11px] leading-relaxed text-blue-800/70 border border-blue-100">
+        <strong>💡 ヒント:</strong> PDFからコピーした文章の改行を整える場合は「改行をすべて削除」を、ブログの下書きを整理する場合は「空行を1行に集約」をご利用ください。
+      </div>
+    </div>
   )
 }

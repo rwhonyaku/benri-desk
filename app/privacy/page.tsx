@@ -1,59 +1,86 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "プライバシーポリシー | Benri Desk",
-  description: "Benri Desk（オンライン便利ツール集）のプライバシーポリシーです。",
+  description: "Benri Deskのプライバシーポリシーと入力内容の取り扱いについてのご案内です。",
 }
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8">
-      <h1 className="text-xl font-semibold text-neutral-900">プライバシーポリシー</h1>
-
-      <section className="mt-4 space-y-4 rounded-lg border border-neutral-200 bg-white p-4 text-sm text-neutral-800">
-        <p>
-          Benri Desk（以下「当サイト」）は、ユーザーの利便性向上のために必要な範囲で情報を取り扱います。
+    <main className="mx-auto w-full max-w-3xl px-6 py-12 md:py-20">
+      <header className="mb-12 border-b border-neutral-100 pb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">
+          プライバシーポリシー
+        </h1>
+        <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+          Benri Desk（以下「当サイト」）における情報の取り扱いについて記載します。
         </p>
+      </header>
 
-        <div className="space-y-2">
-          <h2 className="text-base font-medium text-neutral-900">広告について</h2>
+      <div className="space-y-10 text-sm leading-7 text-neutral-700">
+        <section>
+          <h2 className="mb-3 text-base font-bold text-neutral-900">入力内容の取り扱い</h2>
           <p>
-            当サイトは、第三者配信の広告サービス（Google AdSense）を利用する場合があります。広告配信事業者は、
-            ユーザーの興味に応じた広告を表示するために Cookie を使用することがあります。
+            ユーザーが各ツールに入力した内容は、原則としてそのツールの処理と結果表示のために利用されます。
+            多くのツールはブラウザ上で処理されますが、郵便番号検索など一部のツールでは、必要な結果を取得するために外部サービスへ通信する場合があります。
           </p>
+          <p className="mt-3">
+            当サイトがユーザー入力を保存する場合は、そのツール内で分かるように記載します。
+          </p>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-base font-bold text-neutral-900">アクセス情報・解析について</h2>
           <p>
-            Google による広告での Cookie の使用により、当サイトや他サイトへのアクセス情報に基づいて広告が配信されることがあります。
-            パーソナライズ広告は{" "}
-            <a
-              className="underline"
-              href="https://adssettings.google.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Google の広告設定
-            </a>
-            から無効にできます。
+            当サイトでは、改善や利用状況の確認のため、アクセス解析などの外部サービスを使用する場合があります。
+            その際、閲覧ページ、利用環境、アクセス日時などの基本的な情報が取得される場合があります。
           </p>
-        </div>
+        </section>
 
-        <div className="space-y-2">
-          <h2 className="text-base font-medium text-neutral-900">アクセス解析について</h2>
-          <p>当サイトは、現時点で個人を特定する目的のアクセス解析を行いません。</p>
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="text-base font-medium text-neutral-900">お問い合わせ</h2>
+        <section>
+          <h2 className="mb-3 text-base font-bold text-neutral-900">広告・Cookieについて</h2>
           <p>
-            本ポリシーに関するお問い合わせは、{" "}
-            <a className="underline" href="mailto:contact@benri-desk.com">
-              contact@benri-desk.com
-            </a>{" "}
-            までご連絡ください。
+            当サイトでは、運営状況に応じて広告配信サービスを利用する場合があります。
+            広告やアクセス解析のために、Cookieなどの技術が使用される場合があります。
+            Cookieはブラウザの設定により無効にできます。
           </p>
-        </div>
+        </section>
 
-        <p className="text-xs text-neutral-500">最終更新日：2025-12-17</p>
-      </section>
+        <section>
+          <h2 className="mb-3 text-base font-bold text-neutral-900">外部サービスについて</h2>
+          <p>
+            当サイトでは、サイト配信、アクセス解析、広告配信、郵便番号検索などのために外部サービスを使用する場合があります。
+            外部サービス上で扱われる情報は、各サービスの規約やプライバシーポリシーに従って取り扱われます。
+          </p>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-base font-bold text-neutral-900">お問い合わせ</h2>
+          <p>
+            本ポリシーに関するお問い合わせは、お問い合わせページからご連絡ください。
+          </p>
+          <Link
+            href="/contact"
+            className="mt-4 inline-flex text-xs font-bold text-blue-600 underline underline-offset-4 hover:text-blue-700"
+          >
+            お問い合わせへ
+          </Link>
+        </section>
+
+        <p className="border-t border-neutral-100 pt-8 text-xs text-neutral-400">
+          最終更新日：2026-05-14
+        </p>
+      </div>
+
+      <div className="mt-16 text-center">
+        <Link
+          href="/"
+          className="text-xs font-bold tracking-widest text-neutral-400 transition-colors hover:text-neutral-900"
+        >
+          ツール一覧へ戻る
+        </Link>
+      </div>
     </main>
   )
 }

@@ -5,233 +5,70 @@ import { useMemo, useState } from "react"
 type Mode = "toHankaku" | "toZenkaku"
 
 const toHankakuMap: Record<string, string> = {
-  // punctuation (common)
-  "！": "!",
-  "＂": '"',
-  "＃": "#",
-  "＄": "$",
-  "％": "%",
-  "＆": "&",
-  "＇": "'",
-  "（": "(",
-  "）": ")",
-  "＊": "*",
-  "＋": "+",
-  "，": ",",
-  "－": "-",
-  "．": ".",
-  "／": "/",
-  "：": ":",
-  "；": ";",
-  "＜": "<",
-  "＝": "=",
-  "＞": ">",
-  "？": "?",
-  "＠": "@",
-  "［": "[",
-  "＼": "\\",
-  "］": "]",
-  "＾": "^",
-  "＿": "_",
-  "｀": "`",
-  "｛": "{",
-  "｜": "|",
-  "｝": "}",
-  "～": "~",
-  "　": " ", // full-width space
+  "！": "!", "＂": '"', "＃": "#", "＄": "$", "％": "%", "＆": "&", "＇": "'", "（": "(", "）": ")",
+  "＊": "*", "＋": "+", "，": ",", "－": "-", "．": ".", "／": "/", "：": ":", "；": ";", "＜": "<",
+  "＝": "=", "＞": ">", "？": "?", "＠": "@", "［": "[", "＼": "\\", "］": "]", "＾": "^", "＿": "_",
+  "｀": "`", "｛": "{", "｜": "|", "｝": "}", "～": "~", "　": " "
 }
 
-// Halfwidth katakana -> fullwidth base (minimal but practical set)
 const halfKanaToFull: Record<string, string> = {
-  "｡": "。",
-  "｢": "「",
-  "｣": "」",
-  "､": "、",
-  "･": "・",
-  "ｦ": "ヲ",
-  "ｧ": "ァ",
-  "ｨ": "ィ",
-  "ｩ": "ゥ",
-  "ｪ": "ェ",
-  "ｫ": "ォ",
-  "ｬ": "ャ",
-  "ｭ": "ュ",
-  "ｮ": "ョ",
-  "ｯ": "ッ",
-  "ｰ": "ー",
-  "ｱ": "ア",
-  "ｲ": "イ",
-  "ｳ": "ウ",
-  "ｴ": "エ",
-  "ｵ": "オ",
-  "ｶ": "カ",
-  "ｷ": "キ",
-  "ｸ": "ク",
-  "ｹ": "ケ",
-  "ｺ": "コ",
-  "ｻ": "サ",
-  "ｼ": "シ",
-  "ｽ": "ス",
-  "ｾ": "セ",
-  "ｿ": "ソ",
-  "ﾀ": "タ",
-  "ﾁ": "チ",
-  "ﾂ": "ツ",
-  "ﾃ": "テ",
-  "ﾄ": "ト",
-  "ﾅ": "ナ",
-  "ﾆ": "ニ",
-  "ﾇ": "ヌ",
-  "ﾈ": "ネ",
-  "ﾉ": "ノ",
-  "ﾊ": "ハ",
-  "ﾋ": "ヒ",
-  "ﾌ": "フ",
-  "ﾍ": "ヘ",
-  "ﾎ": "ホ",
-  "ﾏ": "マ",
-  "ﾐ": "ミ",
-  "ﾑ": "ム",
-  "ﾒ": "メ",
-  "ﾓ": "モ",
-  "ﾔ": "ヤ",
-  "ﾕ": "ユ",
-  "ﾖ": "ヨ",
-  "ﾗ": "ラ",
-  "ﾘ": "リ",
-  "ﾙ": "ル",
-  "ﾚ": "レ",
-  "ﾛ": "ロ",
-  "ﾜ": "ワ",
-  "ﾝ": "ン",
-  "ﾞ": "゛",
-  "ﾟ": "゜",
+  "｡": "。", "｢": "「", "｣": "」", "､": "、", "･": "・", "ｦ": "ヲ", "ｧ": "ァ", "ｨ": "ィ", "ｩ": "ゥ",
+  "ｪ": "ェ", "ｫ": "ォ", "ｬ": "ャ", "ｭ": "ュ", "ｮ": "ョ", "ｯ": "ッ", "ｰ": "ー", "ｱ": "ア", "ｲ": "イ",
+  "ｳ": "ウ", "ｴ": "エ", "ｵ": "オ", "ｶ": "カ", "ｷ": "キ", "ｸ": "ク", "ｹ": "ケ", "ｺ": "コ", "ｻ": "サ",
+  "ｼ": "シ", "ｽ": "ス", "ｾ": "セ", "ｿ": "ソ", "ﾀ": "タ", "ﾁ": "チ", "ﾂ": "ツ", "ﾃ": "テ", "ﾄ": "ト",
+  "ﾅ": "ナ", "ﾆ": "ニ", "ﾇ": "ヌ", "ﾈ": "ネ", "ﾉ": "ノ", "ﾊ": "ハ", "ﾋ": "ヒ", "ﾌ": "フ", "ﾍ": "ヘ",
+  "ﾎ": "ホ", "ﾏ": "マ", "ﾐ": "ミ", "ﾑ": "ム", "ﾒ": "メ", "ﾓ": "モ", "ﾔ": "ヤ", "ﾕ": "ユ", "ﾖ": "ヨ",
+  "ﾗ": "ラ", "ﾘ": "リ", "ﾙ": "ル", "ﾚ": "レ", "ﾛ": "ロ", "ﾜ": "ワ", "ﾝ": "ン", "ﾞ": "゛", "ﾟ": "゜",
 }
 
-// Build reverse maps
 const toZenkakuMap: Record<string, string> = Object.fromEntries(
   Object.entries(toHankakuMap).map(([zen, han]) => [han, zen])
 )
 
 function isAsciiLetterNumber(ch: string) {
   const code = ch.charCodeAt(0)
-  return (
-    (code >= 0x30 && code <= 0x39) || // 0-9
-    (code >= 0x41 && code <= 0x5a) || // A-Z
-    (code >= 0x61 && code <= 0x7a) // a-z
-  )
-}
-
-function toHankakuAscii(ch: string) {
-  const code = ch.charCodeAt(0)
-  // Fullwidth ASCII range: FF01–FF5E maps to 21–7E by -0xFEE0
-  if (code >= 0xff01 && code <= 0xff5e) return String.fromCharCode(code - 0xfee0)
-  return ch
-}
-
-function toZenkakuAscii(ch: string) {
-  const code = ch.charCodeAt(0)
-  if (code >= 0x21 && code <= 0x7e) return String.fromCharCode(code + 0xfee0)
-  return ch
+  return (code >= 0x30 && code <= 0x39) || (code >= 0x41 && code <= 0x5a) || (code >= 0x61 && code <= 0x7a)
 }
 
 function normalize(input: string, mode: Mode, opts: { alnum: boolean; kana: boolean; symbols: boolean }) {
-  // Note: we do NOT touch hiragana/kanji.
   let out = ""
-  const s = input
-
-  for (let i = 0; i < s.length; i++) {
-    const ch = s[i]
-
+  for (let i = 0; i < input.length; i++) {
+    const ch = input[i]
     if (mode === "toHankaku") {
-      // Halfwidth space conversion: include under symbols
-      if (opts.symbols && ch === "　") {
-        out += " "
-        continue
-      }
-
-      // Fullwidth alnum
+      if (opts.symbols && ch === "　") { out += " "; continue; }
       if (opts.alnum) {
-        const conv = toHankakuAscii(ch)
-        if (conv !== ch && isAsciiLetterNumber(conv)) {
-          out += conv
-          continue
+        const code = ch.charCodeAt(0)
+        if (code >= 0xff01 && code <= 0xff5e) {
+          const conv = String.fromCharCode(code - 0xfee0)
+          if (isAsciiLetterNumber(conv)) { out += conv; continue; }
         }
       }
-
-      // Fullwidth punctuation/symbols
-      if (opts.symbols && toHankakuMap[ch]) {
-        out += toHankakuMap[ch]
-        continue
-      }
-
-      // Katakana: use Unicode normalization for the heavy lifting
-      // NFKC converts fullwidth forms and compatibility kana.
-      if (opts.kana) {
-        const nfkc = ch.normalize("NFKC")
-        out += nfkc
-        continue
-      }
-
+      if (opts.symbols && toHankakuMap[ch]) { out += toHankakuMap[ch]; continue; }
+      if (opts.kana) { out += ch.normalize("NFKC"); continue; }
       out += ch
     } else {
-      // toZenkaku
-      // Halfwidth katakana -> fullwidth (handle dakuten combos like ｶﾞ)
       if (opts.kana) {
-        const next = s[i + 1]
+        const next = input[i + 1]
         const base = halfKanaToFull[ch]
         if (base) {
           if (next === "ﾞ" || next === "ﾟ") {
-            const mark = halfKanaToFull[next] // ゛ or ゜
-            // Combine using NFC to get e.g. ガ
-            out += (base + mark).normalize("NFC")
-            i++
-            continue
+            out += (base + halfKanaToFull[next]).normalize("NFC")
+            i++; continue
           }
-          out += base
-          continue
+          out += base; continue
         }
       }
-
-      // ASCII alnum to fullwidth
       if (opts.alnum && isAsciiLetterNumber(ch)) {
-        out += toZenkakuAscii(ch)
-        continue
+        out += String.fromCharCode(ch.charCodeAt(0) + 0xfee0); continue
       }
-
-      // ASCII punctuation/symbols + space
       if (opts.symbols) {
-        if (ch === " ") {
-          out += "　"
-          continue
-        }
-        if (toZenkakuMap[ch]) {
-          out += toZenkakuMap[ch]
-          continue
-        }
+        if (ch === " ") { out += "　"; continue; }
+        if (toZenkakuMap[ch]) { out += toZenkakuMap[ch]; continue; }
       }
-
       out += ch
     }
   }
-
   return out
-}
-
-async function copyToClipboard(text: string) {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text)
-    return
-  }
-  const ta = document.createElement("textarea")
-  ta.value = text
-  ta.setAttribute("readonly", "true")
-  ta.style.position = "fixed"
-  ta.style.left = "-9999px"
-  document.body.appendChild(ta)
-  ta.select()
-  document.execCommand("copy")
-  document.body.removeChild(ta)
 }
 
 export default function ZenkakuHankakuClient() {
@@ -247,110 +84,109 @@ export default function ZenkakuHankakuClient() {
     [input, mode, alnum, kana, symbols]
   )
 
-  const stats = useMemo(() => {
-    const inChars = input.length
-    const outChars = output.length
-    return { inChars, outChars }
-  }, [input, output])
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(output)
+      setCopyMsg("コピーしました")
+    } catch {
+      setCopyMsg("失敗")
+    } finally {
+      setTimeout(() => setCopyMsg(null), 1500)
+    }
+  }
 
   return (
-    <section className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="text-sm font-medium text-neutral-900">変換</div>
+    <div className="space-y-6">
+      {/* Control Panel */}
+      <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">変換モード</span>
+            <div className="flex gap-1 rounded-lg bg-neutral-100 p-1 w-fit">
+              <button
+                onClick={() => setMode("toHankaku")}
+                className={`rounded-md px-6 py-2 text-xs font-bold transition-all ${
+                  mode === "toHankaku" ? "bg-white text-blue-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
+                }`}
+              >
+                全角 → 半角
+              </button>
+              <button
+                onClick={() => setMode("toZenkaku")}
+                className={`rounded-md px-6 py-2 text-xs font-bold transition-all ${
+                  mode === "toZenkaku" ? "bg-white text-blue-600 shadow-sm" : "text-neutral-500 hover:text-neutral-700"
+                }`}
+              >
+                半角 → 全角
+              </button>
+            </div>
+          </div>
 
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-          <label className="flex items-center gap-2 text-sm text-neutral-700">
-            <input
-              type="radio"
-              name="mode"
-              checked={mode === "toHankaku"}
-              onChange={() => setMode("toHankaku")}
-            />
-            全角 → 半角
-          </label>
-          <label className="flex items-center gap-2 text-sm text-neutral-700">
-            <input
-              type="radio"
-              name="mode"
-              checked={mode === "toZenkaku"}
-              onChange={() => setMode("toZenkaku")}
-            />
-            半角 → 全角
-          </label>
+          <div className="space-y-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">対象オプション</span>
+            <div className="flex flex-wrap gap-4">
+              {[
+                { label: "英数字", state: alnum, set: setAlnum },
+                { label: "カタカナ", state: kana, set: setKana },
+                { label: "記号・スペース", state: symbols, set: setSymbols },
+              ].map((opt) => (
+                <label key={opt.label} className="flex cursor-pointer items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50 has-[:checked]:border-blue-200 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-700">
+                  <input type="checkbox" className="hidden" checked={opt.state} onChange={(e) => opt.set(e.target.checked)} />
+                  {opt.state ? "✓ " : "+ "} {opt.label}
+                </label>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-4">
-        <label className="flex items-center gap-2 text-sm text-neutral-700">
-          <input type="checkbox" className="h-4 w-4" checked={alnum} onChange={(e) => setAlnum(e.target.checked)} />
-          英数字
-        </label>
-        <label className="flex items-center gap-2 text-sm text-neutral-700">
-          <input type="checkbox" className="h-4 w-4" checked={kana} onChange={(e) => setKana(e.target.checked)} />
-          カタカナ
-        </label>
-        <label className="flex items-center gap-2 text-sm text-neutral-700">
-          <input type="checkbox" className="h-4 w-4" checked={symbols} onChange={(e) => setSymbols(e.target.checked)} />
-          記号・スペース
-        </label>
-        <div className="ml-auto text-xs text-neutral-500">
-          入力 {stats.inChars.toLocaleString()} 文字 / 出力 {stats.outChars.toLocaleString()} 文字
-        </div>
-      </div>
-
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <div>
-          <div className="text-sm font-medium text-neutral-900">入力</div>
+      {/* Editor Workspace */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-bold text-neutral-800 uppercase tracking-tight">変換前テキスト</span>
+            <button onClick={() => setInput("")} className="text-[10px] font-bold text-rose-500 hover:underline uppercase">Clear</button>
+          </div>
           <textarea
-            className="mt-2 h-56 w-full rounded-md border border-neutral-200 bg-white p-3 text-sm leading-6 text-neutral-900 outline-none focus:ring-2 focus:ring-neutral-200"
+            className="h-80 w-full rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-800 outline-none transition-all focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="ここにテキストを貼り付けてください。"
+            placeholder="ここに変換したいテキストを入力してください..."
             spellCheck={false}
           />
-          <div className="mt-2 flex gap-2">
-            <button
-              type="button"
-              className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-              onClick={() => setInput("")}
-            >
-              クリア
-            </button>
-          </div>
         </div>
 
-        <div>
-          <div className="text-sm font-medium text-neutral-900">出力</div>
-          <textarea
-            className="mt-2 h-56 w-full rounded-md border border-neutral-200 bg-neutral-50 p-3 text-sm leading-6 text-neutral-900 outline-none"
-            value={output}
-            readOnly
-            spellCheck={false}
-          />
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-              onClick={async () => {
-                try {
-                  await copyToClipboard(output)
-                  setCopyMsg("コピーしました")
-                } catch {
-                  setCopyMsg("コピーに失敗しました")
-                } finally {
-                  window.setTimeout(() => setCopyMsg(null), 1500)
-                }
-              }}
-              disabled={output.length === 0}
-            >
-              コピー
-            </button>
-            {copyMsg && <span className="text-sm text-neutral-600">{copyMsg}</span>}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-bold text-neutral-800 uppercase tracking-tight">変換後テキスト</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-neutral-400 font-mono">{output.length} chars</span>
+              {copyMsg && <span className="text-[10px] font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2">{copyMsg}</span>}
+            </div>
+          </div>
+          <div className="relative group h-full">
+            <textarea
+              className="h-80 w-full rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-600 outline-none resize-none font-sans"
+              value={output}
+              readOnly
+              spellCheck={false}
+              placeholder="変換結果がここに表示されます"
+            />
+            {output && (
+              <button
+                onClick={handleCopy}
+                className="absolute bottom-4 right-4 rounded-lg bg-neutral-900 px-5 py-2 text-xs font-bold text-white shadow-lg transition-all hover:bg-neutral-800 active:scale-95"
+              >
+                結果をコピー
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      <p className="mt-4 text-xs text-neutral-500">入力内容は保存されません。処理はこのブラウザ内で完結します。</p>
-    </section>
+      <div className="rounded-lg bg-neutral-100 px-4 py-3 text-[10px] text-neutral-400 text-center uppercase tracking-tighter">
+        Data processing is performed locally in your browser. Original text is never stored.
+      </div>
+    </div>
   )
 }

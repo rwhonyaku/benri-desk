@@ -1,32 +1,83 @@
-// lib/toolComponents.tsx
+import dynamic from 'next/dynamic'
 import type { ComponentType } from "react"
 
-import KaigyoCleanerClient from "@/components/tools/KaigyoCleanerClient"
-import ZenkakuHankakuClient from "@/components/tools/ZenkakuHankakuClient"
-import MojisuuCountClient from "@/components/tools/MojisuuCountClient"
-import DateWithWeekdayClient from "@/components/tools/DateWithWeekdayClient"
-import ZipcodeToAddressClient from "@/components/tools/ZipcodeToAddressClient"
-import BankBusinessDayClient from "@/components/tools/BankBusinessDayClient"
-import RegexTesterClient from "@/components/tools/RegexTesterClient"
-import IpCheckClient from "@/components/tools/IpCheckClient"
-import HttpHeadersClient from "@/components/tools/HttpHeadersClient"
-import WhitespaceCleanerClient from "@/components/tools/WhitespaceCleanerClient"
-import LineCountClient from "@/components/tools/LineCountClient"
-import TabSpaceConverterClient from "@/components/tools/TabSpaceConverterClient"
+// We use ComponentType<any> to satisfy the dynamic loader's type requirements
+export const toolComponents: Record<string, ComponentType<any>> = {
+  // ① テキスト・文字ツール
+  "kaigyo-cleaner": dynamic(() => import("@/components/tools/KaigyoCleanerClient")),
+  "whitespace-cleaner": dynamic(() => import("@/components/tools/WhitespaceCleanerClient")),
+  "zenkaku-hankaku": dynamic(() => import("@/components/tools/ZenkakuHankakuClient")),
+  "kana-converter": dynamic(() => import("@/components/tools/KanaConverterClient")),
+  "romaji-converter": dynamic(() => import("@/components/tools/RomajiConverterClient")),
+  "case-converter": dynamic(() => import("@/components/tools/CaseConverterClient")),
+  "mojisuu-count": dynamic(() => import("@/components/tools/MojisuuCountClient")),
+  "line-count": dynamic(() => import("@/components/tools/LineCountClient")),
+  "char-frequency": dynamic(() => import("@/components/tools/CharFrequencyClient")),
+  "duplicate-line-remover": dynamic(() => import("@/components/tools/DuplicateLineRemoverClient")),
+  "line-sort": dynamic(() => import("@/components/tools/LineSortClient")),
+  "prefix-remover": dynamic(() => import("@/components/tools/PrefixRemoverClient")),
+  "suffix-remover": dynamic(() => import("@/components/tools/SuffixRemoverClient")),
+  "line-numbering": dynamic(() => import("@/components/tools/LineNumberingClient")),
+  "newline-code-converter": dynamic(() => import("@/components/tools/NewlineCodeConverterClient")),
+  "text-diff": dynamic(() => import("@/components/tools/TextDiffClient")),
 
+  // ② 日付・時間・営業日
+  "date-with-weekday": dynamic(() => import("@/components/tools/DateWithWeekdayClient")),
+  "wareki-to-seireki": dynamic(() => import("@/components/tools/WarekiToSeirekiClient")),
+  "seireki-to-wareki": dynamic(() => import("@/components/tools/SeirekiToWarekiClient")),
+  "age-calculator": dynamic(() => import("@/components/tools/AgeCalculatorClient")),
+  "date-diff": dynamic(() => import("@/components/tools/DateDiffClient")),
+  "working-days-count": dynamic(() => import("@/components/tools/WorkingDaysCountClient")),
+  "bank-business-day": dynamic(() => import("@/components/tools/BankBusinessDayClient")),
+  "work-duration": dynamic(() => import("@/components/tools/WorkDurationClient")),
+  "last-day-of-month": dynamic(() => import("@/components/tools/LastDayOfMonthClient")),
+  "week-number": dynamic(() => import("@/components/tools/WeekNumberClient")),
+  "timezone-converter": dynamic(() => import("@/components/tools/TimezoneConverterClient")),
+  "iso-date-converter": dynamic(() => import("@/components/tools/IsoDateConverterClient")),
 
-export const toolComponents: Record<string, ComponentType> = {
-  "kaigyo-cleaner": KaigyoCleanerClient,
-  "zenkaku-hankaku": ZenkakuHankakuClient,
-  "mojisuu-count": MojisuuCountClient,
-  "date-with-weekday": DateWithWeekdayClient,
-  "zipcode-to-address": ZipcodeToAddressClient,
-  "bank-business-day": BankBusinessDayClient,
-  "regex-tester": RegexTesterClient,
-  "ip-check": IpCheckClient,
-  "http-headers": HttpHeadersClient,
-  "whitespace-cleaner": WhitespaceCleanerClient,
-  "line-count": LineCountClient,
-  "tab-space": TabSpaceConverterClient,
-  
+  // ③ Web・IT 基本ツール
+  "ip-check": dynamic(() => import("@/components/tools/IpCheckClient")),
+  "http-headers": dynamic(() => import("@/components/tools/HttpHeadersClient")),
+  "user-agent": dynamic(() => import("@/components/tools/UserAgentClient")),
+  "url-encode": dynamic(() => import("@/components/tools/UrlEncodeClient")),
+  "base64-encode": dynamic(() => import("@/components/tools/Base64EncodeClient")),
+  "uuid-generator": dynamic(() => import("@/components/tools/UuidGeneratorClient")),
+  "query-parser": dynamic(() => import("@/components/tools/QueryParserClient")),
+  "mime-type-checker": dynamic(() => import("@/components/tools/MimeTypeCheckerClient")),
+  "dns-lookup": dynamic(() => import("@/components/tools/DnsLookupClient")),
+  "char-code-checker": dynamic(() => import("@/components/tools/CharCodeCheckerClient")),
+
+  // ④ CSV・データ処理
+  "csv-column-extract": dynamic(() => import("@/components/tools/CsvColumnExtractClient")),
+  "csv-row-count": dynamic(() => import("@/components/tools/CsvRowCountClient")),
+  "csv-duplicate-remover": dynamic(() => import("@/components/tools/CsvDuplicateRemoverClient")),
+  "csv-empty-line-cleaner": dynamic(() => import("@/components/tools/CsvEmptyLineCleanerClient")),
+  "csv-header-remover": dynamic(() => import("@/components/tools/CsvHeaderRemoverClient")),
+  "tsv-csv-converter": dynamic(() => import("@/components/tools/TsvCsvConverterClient")),
+
+  // ⑤ 計算・変換ツール
+  "unit-converter": dynamic(() => import("@/components/tools/UnitConverterClient")),
+  "time-unit-converter": dynamic(() => import("@/components/tools/TimeUnitConverterClient")),
+  "file-size-converter": dynamic(() => import("@/components/tools/FileSizeConverterClient")),
+  "tax-calc": dynamic(() => import("@/components/tools/TaxCalcClient")),
+  "discount-calc": dynamic(() => import("@/components/tools/DiscountCalcClient")),
+  "percentage-diff": dynamic(() => import("@/components/tools/PercentageDiffClient")),
+
+  // ⑥ 日本向け実務ツール
+  "zipcode-to-address": dynamic(() => import("@/components/tools/ZipcodeToAddressClient")),
+  "zipcode-format-check": dynamic(() => import("@/components/tools/ZipcodeFormatCheckClient")),
+  "phone-format-check": dynamic(() => import("@/components/tools/PhoneFormatCheckClient")),
+  "mynumber-check": dynamic(() => import("@/components/tools/MynumberCheckClient")),
+  "password-len-check": dynamic(() => import("@/components/tools/PasswordLenCheckClient")),
+  "holiday-list": dynamic(() => import("@/components/tools/HolidayListClient")),
+
+  // ⑦ 時間系シンプル
+  "simple-timer": dynamic(() => import("@/components/tools/SimpleTimerClient")),
+  "stopwatch": dynamic(() => import("@/components/tools/StopwatchClient")),
+
+  // ⑧ YouTube補助
+  "yt-thumb-download": dynamic(() => import("@/components/tools/YtThumbDownloadClient")),
+  "yt-url-shorten": dynamic(() => import("@/components/tools/YtUrlShortenClient")),
+  "yt-video-id": dynamic(() => import("@/components/tools/YtVideoIdClient")),
+  "yt-embed-gen": dynamic(() => import("@/components/tools/YtEmbedGenClient")),
 }
