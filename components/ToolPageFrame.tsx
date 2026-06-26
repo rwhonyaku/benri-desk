@@ -1,14 +1,17 @@
 // components/ToolPageFrame.tsx
 import Link from "next/link"
+import type { GuideLink } from "@/lib/guides"
 import { categoryMeta, type Tool } from "@/lib/tools"
 
 export default function ToolPageFrame({
   tool,
   related,
+  relatedGuides,
   children,
 }: {
   tool: Tool
   related: Tool[]
+  relatedGuides: GuideLink[]
   children: React.ReactNode
 }) {
   const category = categoryMeta[tool.category]
@@ -87,6 +90,39 @@ export default function ToolPageFrame({
           </div>
         )}
       </section>
+
+      {relatedGuides.length > 0 && (
+        <section className="mt-16">
+          <div className="mb-6 flex items-center gap-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-neutral-400">関連ガイド</h2>
+            <div className="h-px flex-1 bg-neutral-100" />
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {relatedGuides.map((guide) => (
+              <Link
+                key={guide.href}
+                className="group flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-5 transition-all hover:border-blue-400 hover:shadow-md"
+                href={guide.href}
+              >
+                <div>
+                  <div className="text-sm font-bold text-neutral-900 transition-colors group-hover:text-blue-600">
+                    {guide.label}
+                  </div>
+                  {guide.description && (
+                    <div className="mt-1 text-xs leading-relaxed text-neutral-500 line-clamp-2">
+                      {guide.description}
+                    </div>
+                  )}
+                </div>
+                <div className="mt-4 text-[10px] font-bold uppercase tracking-widest text-neutral-300 transition-colors group-hover:text-blue-400">
+                  このガイドを読む →
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <nav className="mt-16 border-t border-neutral-100 pt-10 text-center">
         <Link

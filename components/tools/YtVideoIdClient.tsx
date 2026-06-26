@@ -1,20 +1,14 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { getYouTubeVideoId } from "@/lib/youtubeUtils"
 
 export default function YtVideoIdClient() {
   const [url, setUrl] = useState("")
 
   const videoId = useMemo(() => {
     if (!url) return ""
-
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-    const match = url.match(regExp)
-
-    if (match && match[2].length === 11) {
-      return match[2]
-    }
-    return "取得できませんでした"
+    return getYouTubeVideoId(url) || "取得できませんでした"
   }, [url])
 
   return (

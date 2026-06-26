@@ -13,6 +13,39 @@ const CATEGORIES = [
   { id: "youtube", name: "YouTube補助", icon: "📺" },
 ] as const
 
+const CATEGORY_GUIDE_LINKS: Partial<Record<(typeof CATEGORIES)[number]["id"], { href: string; label: string }[]>> = {
+  text: [
+    {
+      href: "/guides/zenkaku-hankaku-difference",
+      label: "全角・半角の違い",
+    },
+  ],
+  date: [
+    {
+      href: "/guides/business-day-meaning",
+      label: "営業日とは？平日・稼働日との違い",
+    },
+  ],
+  network: [
+    {
+      href: "/guides/character-encoding-meaning",
+      label: "文字コードとは？UTF-8・Shift_JIS・Unicodeの違い",
+    },
+  ],
+  dev: [
+    {
+      href: "/guides/csv-tsv-difference",
+      label: "CSVとTSVの違い",
+    },
+  ],
+  calc: [
+    {
+      href: "/guides/unit-conversion-meaning",
+      label: "単位換算とは？長さ・重さ・温度の単位",
+    },
+  ],
+}
+
 export default function HomePage() {
   return (
     <main className="mx-auto w-full max-w-4xl px-5 py-12 md:py-20">
@@ -92,6 +125,20 @@ export default function HomePage() {
                   </Link>
                 ))}
               </div>
+
+              {CATEGORY_GUIDE_LINKS[cat.id] && (
+                <div className="mt-5 flex flex-wrap gap-3 text-xs font-bold text-neutral-500">
+                  {CATEGORY_GUIDE_LINKS[cat.id]?.map((guide) => (
+                    <Link
+                      key={guide.href}
+                      href={guide.href}
+                      className="transition-colors hover:text-blue-600"
+                    >
+                      関連ガイド：{guide.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </section>
           )
         })}

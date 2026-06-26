@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { parseDelimitedRows, stringifyDelimitedRows } from "@/lib/csvUtils"
 
 export default function CsvColumnSwapClient() {
   const [csv, setCsv] = useState("")
@@ -8,9 +9,8 @@ export default function CsvColumnSwapClient() {
   const [colB, setColB] = useState(2)
 
   const handleSwap = () => {
-    const lines = csv.split("\n")
-    const result = lines.map(line => {
-      const cols = line.split(",")
+    const rows = parseDelimitedRows(csv)
+    const result = rows.map((cols) => {
       const idxA = colA - 1
       const idxB = colB - 1
       if (cols[idxA] !== undefined && cols[idxB] !== undefined) {
@@ -18,9 +18,9 @@ export default function CsvColumnSwapClient() {
         cols[idxA] = cols[idxB]
         cols[idxB] = temp
       }
-      return cols.join(",")
-    }).join("\n")
-    setCsv(result)
+      return cols
+    })
+    setCsv(stringifyDelimitedRows(result))
   }
 
   return (

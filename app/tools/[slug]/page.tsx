@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import ToolPageFrame from "@/components/ToolPageFrame"
+import { getGuidesForToolSlug } from "@/lib/guides"
 import { getTool } from "@/lib/tools"
 import { toolComponents } from "@/lib/toolComponents"
 
@@ -93,10 +94,12 @@ export default async function ToolPage({ params }: Props) {
     .map((relatedSlug) => getTool(relatedSlug))
     .filter((item): item is NonNullable<typeof item> => Boolean(item))
 
+  const relatedGuides = getGuidesForToolSlug(slug)
+
   const uses = CATEGORY_USES[tool.category as ToolCategory] ?? CATEGORY_USES.other
 
   return (
-    <ToolPageFrame tool={tool} related={related}>
+    <ToolPageFrame tool={tool} related={related} relatedGuides={relatedGuides}>
       <section className="mb-12">
         <ToolComponent />
       </section>

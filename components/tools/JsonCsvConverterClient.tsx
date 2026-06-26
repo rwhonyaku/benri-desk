@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { parseDelimitedRows, stringifyDelimitedRows } from "@/lib/csvUtils"
 
 export default function JsonCsvConverterClient() {
   const [text, setText] = useState("")
@@ -8,13 +9,31 @@ export default function JsonCsvConverterClient() {
   const handleJsonToCsv = () => {
     try {
       const data = JSON.parse(text)
-      if (!Array.isArray(data)) throw new Error("JSON must be an array of objects")
-      const headers = Object.keys(data[0])
-      const csv = [
-        headers.join(","),
-        ...data.map(row => headers.map(h => row[h]).join(","))
-      ].join("\n")
-      setText(csv)
+      if (!Array.isArray(data)) throw new Error("JSON must be an array")
+      if (data.length === 0) {
+        setText("")
+        return
+      }
+
+      const rows = data.map((item) => {
+        if (item === null || typeof item !== "object" || Array.isArray(item)) {
+          throw new Error("JSON must be an array of objects")
+        }
+        return item as Record<string, unknown>
+      })
+      const headers = Array.from(new Set(rows.flatMap((row) => Object.keys(row))))
+      const csvRows = [
+        headers,
+        ...rows.map((row) =>
+          headers.map((header) => {
+            const value = row[header]
+            if (value === null || value === undefined) return ""
+            if (typeof value === "object") return JSON.stringify(value)
+            return String(value)
+          })
+        ),
+      ]
+      setText(stringifyDelimitedRows(csvRows))
     } catch (e) {
       alert("JSONの形式が正しくありません。配列形式である必要があります。")
     }
@@ -22,15 +41,14 @@ export default function JsonCsvConverterClient() {
 
   const handleCsvToJson = () => {
     try {
-      const lines = text.trim().split("\n")
-      const headers = lines[0].split(",")
-      const json = lines.slice(1).map(line => {
-        const values = line.split(",")
-        return headers.reduce((obj, header, i) => {
-          obj[header.trim()] = values[i]?.trim()
+      const rows = parseDelimitedRows(text)
+      const headers = rows[0]?.map((header) => header.trim()) ?? []
+      const json = rows.slice(1).map((row) =>
+        headers.reduce<Record<string, string>>((obj, header, i) => {
+          if (header) obj[header] = row[i] ?? ""
           return obj
-        }, {} as any)
-      })
+        }, {})
+      )
       setText(JSON.stringify(json, null, 2))
     } catch (e) {
       alert("CSVの解析に失敗しました。")

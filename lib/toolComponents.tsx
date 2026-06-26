@@ -29,9 +29,12 @@ export const toolComponents: Record<string, ComponentType<any>> = {
   "date-diff": dynamic(() => import("@/components/tools/DateDiffClient")),
   "working-days-count": dynamic(() => import("@/components/tools/WorkingDaysCountClient")),
   "bank-business-day": dynamic(() => import("@/components/tools/BankBusinessDayClient")),
+  "next-business-day": dynamic(() => import("@/components/tools/NextBusinessDayClient")),
+  "payment-due-date": dynamic(() => import("@/components/tools/PaymentDueDateClient")),
   "work-duration": dynamic(() => import("@/components/tools/WorkDurationClient")),
   "last-day-of-month": dynamic(() => import("@/components/tools/LastDayOfMonthClient")),
   "week-number": dynamic(() => import("@/components/tools/WeekNumberClient")),
+  "fiscal-year-calculator": dynamic(() => import("@/components/tools/FiscalYearCalculatorClient")),
   "timezone-converter": dynamic(() => import("@/components/tools/TimezoneConverterClient")),
   "iso-date-converter": dynamic(() => import("@/components/tools/IsoDateConverterClient")),
 
@@ -54,6 +57,14 @@ export const toolComponents: Record<string, ComponentType<any>> = {
   "csv-empty-line-cleaner": dynamic(() => import("@/components/tools/CsvEmptyLineCleanerClient")),
   "csv-header-remover": dynamic(() => import("@/components/tools/CsvHeaderRemoverClient")),
   "tsv-csv-converter": dynamic(() => import("@/components/tools/TsvCsvConverterClient")),
+  "csv-formatter": dynamic(() => import("@/components/tools/CsvFormatterClient")),
+  "csv-sort": dynamic(() => import("@/components/tools/CsvSortClient")),
+  "csv-quote-escape": dynamic(() => import("@/components/tools/CsvQuoteEscapeClient")),
+  "csv-transpose": dynamic(() => import("@/components/tools/CsvTransposeClient")),
+  "csv-column-swap": dynamic(() => import("@/components/tools/CsvColumnSwapClient")),
+  "csv-merge": dynamic(() => import("@/components/tools/CsvMergeClient")),
+  "csv-split": dynamic(() => import("@/components/tools/CsvSplitClient")),
+  "json-csv-converter": dynamic(() => import("@/components/tools/JsonCsvConverterClient")),
 
   // ⑤ 計算・変換ツール
   "unit-converter": dynamic(() => import("@/components/tools/UnitConverterClient")),
@@ -80,4 +91,7 @@ export const toolComponents: Record<string, ComponentType<any>> = {
   "yt-url-shorten": dynamic(() => import("@/components/tools/YtUrlShortenClient")),
   "yt-video-id": dynamic(() => import("@/components/tools/YtVideoIdClient")),
   "yt-embed-gen": dynamic(() => import("@/components/tools/YtEmbedGenClient")),
+  "yt-timestamp-generator": dynamic(() => import("@/components/tools/YtTimestampGeneratorClient")),
+  "yt-playlist-id": dynamic(() => import("@/components/tools/YtPlaylistIdClient")),
+  "yt-channel-id": dynamic(() => import("@/components/tools/YtChannelIdClient")),
 }

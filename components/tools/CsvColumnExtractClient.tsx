@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { parseDelimitedRows, stringifyDelimitedRows } from "@/lib/csvUtils"
 
 export default function CsvColumnExtractClient() {
   const [csv, setCsv] = useState("")
@@ -8,14 +9,12 @@ export default function CsvColumnExtractClient() {
 
   const result = useMemo(() => {
     if (!csv) return ""
-    const lines = csv.split("\n")
-    return lines
-      .map(line => {
-        const cols = line.split(",")
-        return cols[colIndex - 1] || ""
-      })
-      .filter(val => val.trim() !== "")
-      .join("\n")
+    const rows = parseDelimitedRows(csv)
+    return stringifyDelimitedRows(
+      rows
+        .map((row) => [row[colIndex - 1] ?? ""])
+        .filter((row) => row[0].trim() !== "")
+    )
   }, [csv, colIndex])
 
   return (

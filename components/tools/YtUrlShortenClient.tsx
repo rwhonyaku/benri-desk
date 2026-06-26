@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { getYouTubeVideoId } from "@/lib/youtubeUtils"
 
 export default function YtUrlShortenClient() {
   const [url, setUrl] = useState("")
@@ -8,10 +9,7 @@ export default function YtUrlShortenClient() {
   const shortened = useMemo(() => {
     if (!url) return ""
     
-    // Regular expression to find YouTube Video ID
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-    const match = url.match(regExp)
-    const videoId = (match && match[2].length === 11) ? match[2] : null
+    const videoId = getYouTubeVideoId(url)
 
     if (!videoId) return "無効なURLです"
 

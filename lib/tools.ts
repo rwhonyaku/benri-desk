@@ -93,22 +93,38 @@ export const tools: Tool[] = [
   { slug: "newline-code-converter", titleJa: "改行コード変換（LF/CRLF）", descriptionJa: "OSによる改行コードの違いを変換します。", category: "text", relatedSlugs: ["kaigyo-cleaner"] },
   { slug: "text-diff", titleJa: "テキスト差分比較（簡易）", descriptionJa: "2つの文章を比較して違いを表示します。", category: "text", relatedSlugs: ["kaigyo-cleaner"] },
 
-  // ② 日付・時間・営業日 (12)
-  { slug: "date-with-weekday", titleJa: "曜日付き日付変換", descriptionJa: "日付を入力すると曜日と和暦を表示します。", category: "date", relatedSlugs: ["wareki-to-seireki"] },
+  // ② 日付・時間・営業日
+  { slug: "date-with-weekday", titleJa: "曜日付き日付変換", descriptionJa: "日付を入力すると曜日と和暦を表示します。", category: "date", relatedSlugs: ["week-number", "date-diff", "wareki-to-seireki"] },
   { slug: "wareki-to-seireki", titleJa: "和暦→西暦変換", descriptionJa: "令和・平成などの和暦を西暦に変換します。", category: "date", relatedSlugs: ["seireki-to-wareki"] },
   { slug: "seireki-to-wareki", titleJa: "西暦→和暦変換", descriptionJa: "西暦を日本の和暦に変換します。", category: "date", relatedSlugs: ["wareki-to-seireki"] },
   { 
     slug: "age-calculator", 
     titleJa: "年齢計算", 
+    pageTitleJa: "年齢計算｜生年月日から満年齢と経過日数を計算",
     descriptionJa: "生年月日から現在の年齢と経過日数を計算します。", 
+    introLines: [
+      "生年月日を入力すると、現在の満年齢と生まれてからの日数を計算できます。",
+      "履歴書や申請書の記入前に年齢を確認したいときに使えます。",
+    ],
     category: "date", 
-    relatedSlugs: ["date-diff"],
+    relatedSlugs: ["date-diff", "date-with-weekday", "work-duration"],
     articleHtml: `
       <h3>誕生日から正確な年齢と日数を算出</h3>
-      <p>生年月日を入力するだけで、現在の満年齢、次回の誕生日までの日数、生まれてから今日までの通算日数を計算します。履歴書の記入や、保険の手続き、記念日の確認にご活用ください。</p>
+      <p>生年月日を入力するだけで、現在の満年齢と生まれてから今日までの通算日数を計算します。履歴書の記入や、記念日の確認にご利用ください。</p>
     `
   },
-  { slug: "date-diff", titleJa: "日付差分計算（日数）", descriptionJa: "2つの日付の間の日数を計算します。", category: "date", relatedSlugs: ["working-days-count"] },
+  {
+    slug: "date-diff",
+    titleJa: "日付差分計算（日数）",
+    pageTitleJa: "日付差分計算｜2つの日付の間の日数を計算",
+    descriptionJa: "2つの日付の間の日数を計算します。",
+    introLines: [
+      "開始日と終了日を入力して、2つの日付の間の日数を計算できます。",
+      "営業日ではなく、暦上の日数を確認したいときに使えます。",
+    ],
+    category: "date",
+    relatedSlugs: ["working-days-count", "next-business-day", "age-calculator"],
+  },
   { 
     slug: "working-days-count", 
     titleJa: "営業日カウント", 
@@ -120,7 +136,7 @@ export const tools: Tool[] = [
       "たとえば4月1日から4月10日までの実働日数を知りたいときに便利です。",
     ],
     category: "date", 
-    relatedSlugs: ["bank-business-day", "date-diff", "holiday-list"],
+    relatedSlugs: ["next-business-day", "payment-due-date", "bank-business-day"],
     articleHtml: `
       <h3>プロジェクト管理に必須の営業日計算</h3>
       <p>日本の祝日設定に基づき、2つの日付の間にある「営業日（平日）」のみをカウントします。納期までの実働日数の確認や、スケジュール立案に役立ちます。</p>
@@ -137,11 +153,58 @@ export const tools: Tool[] = [
       "たとえば月末が土日祝に重なるとき、前後の営業日確認に役立ちます。",
     ],
     category: "date",
-    relatedSlugs: ["working-days-count", "holiday-list", "date-with-weekday"],
+    relatedSlugs: ["next-business-day", "payment-due-date", "working-days-count"],
+  },
+  {
+    slug: "next-business-day",
+    titleJa: "翌営業日計算",
+    pageTitleJa: "翌営業日計算｜土日祝を除いた次の営業日を確認",
+    descriptionJa: "指定日の次の営業日を計算します。",
+    introLines: [
+      "指定した日付から、土日祝を除いた次の営業日を確認できます。",
+      "発送日、振込予定日、申請処理日の目安を確認したいときに使えます。",
+    ],
+    category: "date",
+    relatedSlugs: ["working-days-count", "bank-business-day", "payment-due-date"],
+  },
+  {
+    slug: "payment-due-date",
+    titleJa: "支払期日計算",
+    pageTitleJa: "支払期日計算｜支払サイトと土日祝調整で期日を確認",
+    descriptionJa: "基準日と支払サイトから支払期日を計算します。",
+    introLines: [
+      "基準日と支払サイトの日数を入力して、支払期日を計算できます。",
+      "期日が土日祝にあたる場合は、翌営業日または前営業日に調整できます。",
+    ],
+    category: "date",
+    relatedSlugs: ["next-business-day", "working-days-count", "bank-business-day"],
   },
   { slug: "work-duration", titleJa: "勤務日数計算", descriptionJa: "入社日から今日までの合計勤務日数を算出します。", category: "date", relatedSlugs: ["age-calculator"] },
-  { slug: "last-day-of-month", titleJa: "月末日取得ツール", descriptionJa: "指定した年月の最終日を求めます。", category: "date", relatedSlugs: ["date-with-weekday"] },
-  { slug: "week-number", titleJa: "指定日が第何週か表示", descriptionJa: "その日が月の第何月曜日などを判定します。", category: "date", relatedSlugs: ["date-with-weekday"] },
+  { slug: "last-day-of-month", titleJa: "月末日取得ツール", descriptionJa: "指定した年月の最終日を求めます。", category: "date", relatedSlugs: ["date-with-weekday", "fiscal-year-calculator"] },
+  {
+    slug: "week-number",
+    titleJa: "週番号・第何週計算",
+    pageTitleJa: "週番号・第何週計算｜指定日が月の第何曜日か確認",
+    descriptionJa: "指定日が月の第何曜日かを判定します。",
+    introLines: [
+      "指定した日付が、その月の何回目の曜日にあたるかを確認できます。",
+      "第2月曜日、第3金曜日のような日付確認に使えます。",
+    ],
+    category: "date",
+    relatedSlugs: ["date-with-weekday", "date-diff", "fiscal-year-calculator"],
+  },
+  {
+    slug: "fiscal-year-calculator",
+    titleJa: "年度計算",
+    pageTitleJa: "年度計算｜対象日が何年度かを確認",
+    descriptionJa: "指定した日付が何年度にあたるかを計算します。",
+    introLines: [
+      "対象日と年度開始月を指定して、その日付が何年度にあたるかを計算できます。",
+      "4月始まりの年度や、会社ごとの会計年度を確認したいときに使えます。",
+    ],
+    category: "date",
+    relatedSlugs: ["date-with-weekday", "last-day-of-month", "week-number"],
+  },
   { slug: "timezone-converter", titleJa: "タイムゾーン変換（JST/UTC）", descriptionJa: "日本時間と世界標準時を相互変換します。", category: "date", relatedSlugs: ["iso-date-converter"] },
   { slug: "iso-date-converter", titleJa: "ISO日付フォーマット変換", descriptionJa: "日付をISO 8601形式等に整えます。", category: "date", relatedSlugs: ["timezone-converter"] },
 
@@ -167,13 +230,131 @@ export const tools: Tool[] = [
   { slug: "dns-lookup", titleJa: "DNSレコード確認", descriptionJa: "ドメインの公開情報を確認します。", category: "network", relatedSlugs: ["ip-check"] },
   { slug: "char-code-checker", titleJa: "文字コード確認", descriptionJa: "UTF-8やSJISなどのエンコードを確認します。", category: "network", relatedSlugs: ["mime-type-checker"] },
 
-  // ④ CSV・データ処理 (6)
-  { slug: "csv-column-extract", titleJa: "CSV列抽出ツール", descriptionJa: "CSVから特定の列だけを取り出します。", category: "dev", relatedSlugs: ["csv-row-count"] },
-  { slug: "csv-row-count", titleJa: "CSV行数カウント", descriptionJa: "CSVファイルのデータ行数を計測します。", category: "dev", relatedSlugs: ["csv-duplicate-remover"] },
-  { slug: "csv-duplicate-remover", titleJa: "CSV重複行削除", descriptionJa: "CSV内の重複データを整理します。", category: "dev", relatedSlugs: ["csv-column-extract"] },
-  { slug: "csv-empty-line-cleaner", titleJa: "CSV空白行削除", descriptionJa: "データのない空行を除去します。", category: "dev", relatedSlugs: ["csv-header-remover"] },
-  { slug: "csv-header-remover", titleJa: "CSVヘッダー削除", descriptionJa: "1行目の見出し行を削除します。", category: "dev", relatedSlugs: ["csv-column-extract"] },
-  { slug: "tsv-csv-converter", titleJa: "TSV⇄CSV変換", descriptionJa: "タブ区切りとカンマ区切りを相互変換します。", category: "dev", relatedSlugs: ["csv-column-extract"] },
+  // ④ CSV・データ処理
+  {
+    slug: "csv-column-extract",
+    titleJa: "CSV列抽出ツール",
+    pageTitleJa: "CSV列抽出ツール｜指定した列だけを取り出す",
+    descriptionJa: "CSVから指定した列だけを取り出します。",
+    introLines: [
+      "CSVデータから必要な列だけを抽出できます。",
+      "メールアドレス列やID列など、一部の列だけを取り出したいときに便利です。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-column-swap", "csv-merge", "csv-formatter"],
+  },
+  { slug: "csv-row-count", titleJa: "CSV行数カウント", descriptionJa: "CSVファイルのデータ行数を計測します。", category: "dev", relatedSlugs: ["csv-split", "csv-duplicate-remover", "csv-empty-line-cleaner"] },
+  {
+    slug: "csv-duplicate-remover",
+    titleJa: "CSV重複行削除",
+    pageTitleJa: "CSV重複行削除｜同じCSV行をまとめて削除",
+    descriptionJa: "CSV内の重複行を削除します。",
+    introLines: [
+      "CSVデータ内の同じ行をまとめて削除できます。",
+      "名簿や一覧データの重複整理をしたいときに使えます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-sort", "csv-merge", "csv-formatter"],
+  },
+  { slug: "csv-empty-line-cleaner", titleJa: "CSV空白行削除", descriptionJa: "データのない空行を除去します。", category: "dev", relatedSlugs: ["csv-header-remover", "csv-row-count", "csv-formatter"] },
+  { slug: "csv-header-remover", titleJa: "CSVヘッダー削除", descriptionJa: "1行目の見出し行を削除します。", category: "dev", relatedSlugs: ["csv-column-extract", "csv-sort", "csv-formatter"] },
+  { slug: "tsv-csv-converter", titleJa: "TSV⇄CSV変換", descriptionJa: "タブ区切りとカンマ区切りを相互変換します。", category: "dev", relatedSlugs: ["csv-formatter", "csv-quote-escape", "csv-column-extract"] },
+  {
+    slug: "csv-formatter",
+    titleJa: "CSV整形ツール",
+    pageTitleJa: "CSV整形ツール｜引用符や改行をそろえて見やすく整形",
+    descriptionJa: "CSVの引用符や改行を整えて、扱いやすい形式にします。",
+    introLines: [
+      "CSVデータを貼り付けるだけで、カンマや引用符の扱いをそろえて整形できます。",
+      "CSVを加工する前の確認や、コピーしたデータの体裁を整えたいときに便利です。",
+    ],
+    category: "dev",
+    relatedSlugs: ["tsv-csv-converter", "csv-quote-escape", "csv-sort"],
+  },
+  {
+    slug: "csv-sort",
+    titleJa: "CSVソート",
+    pageTitleJa: "CSVソート｜指定した列でCSV行を並び替え",
+    descriptionJa: "指定した列を基準にCSV行を昇順・降順で並び替えます。",
+    introLines: [
+      "CSVデータを、指定した列番号を基準に並び替えるツールです。",
+      "見出し行を残したまま、数値や文字列を含む行を昇順・降順で整理できます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-formatter", "csv-duplicate-remover", "csv-column-extract"],
+  },
+  {
+    slug: "csv-quote-escape",
+    titleJa: "CSV引用符エスケープ",
+    pageTitleJa: "CSV引用符エスケープ｜カンマやダブルクォートを安全に変換",
+    descriptionJa: "CSVに入れる値のカンマやダブルクォートをエスケープします。",
+    introLines: [
+      "カンマやダブルクォートを含む文字列を、CSVで扱いやすい形に変換します。",
+      "1行ずつ処理する方法と、入力全体を1つの値として処理する方法を選べます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-formatter", "tsv-csv-converter", "csv-transpose"],
+  },
+  {
+    slug: "csv-transpose",
+    titleJa: "CSV転置",
+    pageTitleJa: "CSV転置｜行と列を入れ替える",
+    descriptionJa: "CSVの行と列を入れ替えて、表の向きを変換します。",
+    introLines: [
+      "CSVデータの行と列を入れ替えるツールです。",
+      "月別データや集計表の向きを変えたいときに使えます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-column-extract", "csv-column-swap", "csv-split"],
+  },
+  {
+    slug: "csv-column-swap",
+    titleJa: "CSV列入れ替え",
+    pageTitleJa: "CSV列入れ替え｜指定した2列の順番を変更",
+    descriptionJa: "CSVの指定した2列を入れ替えます。",
+    introLines: [
+      "CSVデータの指定した2列を入れ替えるツールです。",
+      "列の順番をシステムの取り込み形式に合わせたいときに使えます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-column-extract", "csv-transpose", "csv-merge"],
+  },
+  {
+    slug: "csv-merge",
+    titleJa: "CSV結合",
+    pageTitleJa: "CSV結合｜2つのCSVをまとめて結合",
+    descriptionJa: "2つのCSVデータを1つに結合します。",
+    introLines: [
+      "2つのCSVデータを縦方向に結合できます。",
+      "同じ列構成のCSVをまとめたいときや、分割された一覧を1つに戻したいときに使えます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-split", "csv-formatter", "csv-duplicate-remover"],
+  },
+  {
+    slug: "csv-split",
+    titleJa: "CSV分割",
+    pageTitleJa: "CSV分割｜CSVを指定行数ごとに分割",
+    descriptionJa: "CSVを指定した行数ごとに分割します。",
+    introLines: [
+      "CSVデータを指定した行数ごとに分割できます。",
+      "大量のCSVを小さく分けたいときや、取り込み件数に上限がある場合に使えます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-merge", "csv-row-count", "csv-formatter"],
+  },
+  {
+    slug: "json-csv-converter",
+    titleJa: "JSON⇄CSV変換",
+    pageTitleJa: "JSON⇄CSV変換｜JSON配列とCSVを相互変換",
+    descriptionJa: "JSON配列とCSVを相互に変換します。",
+    introLines: [
+      "JSONの配列データとCSVを相互に変換できます。",
+      "APIの結果を表形式にしたいときや、CSVをJSONとして扱いたいときに便利です。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-formatter", "tsv-csv-converter", "char-code-checker"],
+  },
 
   // ⑤ 計算・変換ツール (6)
   { 
@@ -190,12 +371,12 @@ export const tools: Tool[] = [
   {
     slug: "unit-converter",
     titleJa: "単位変換",
-    pageTitleJa: "単位変換｜cm・kg・インチなどを簡単に変換",
-    descriptionJa: "長さや重さの単位を相互変換します。",
+    pageTitleJa: "単位変換｜長さ・重さ・温度・面積などをまとめて変換",
+    descriptionJa: "長さ・重さ・温度・面積・体積・速度・圧力・エネルギーなどを相互変換します。",
     introLines: [
-      "長さや重さなどの単位を簡単に変換できます。",
-      "cm・kg・インチなど、よく使う単位にすばやく対応しています。",
-      "例：100cm → m、kg → lb などをその場で確認できます。",
+      "長さ・重さ・温度・面積・体積・速度・圧力・エネルギーなどの単位を簡単に変換できます。",
+      "cm・kg・インチ・華氏・リットル・km/h・kWh・MBなど、よく使う単位にすばやく対応しています。",
+      "例：100cm → m、kg → lb、摂氏 → 華氏、MB → GBなどをその場で確認できます。",
     ],
     category: "calc",
     relatedSlugs: ["time-unit-converter", "file-size-converter"],
@@ -221,17 +402,64 @@ export const tools: Tool[] = [
   { slug: "phone-format-check", titleJa: "電話番号形式チェック", descriptionJa: "日本の電話番号形式に合致するか判定します。", category: "other", relatedSlugs: ["zipcode-format-check"] },
   { slug: "mynumber-check", titleJa: "マイナンバー桁数チェック", descriptionJa: "桁数と構成が形式的に正しいか確認します。", category: "other", relatedSlugs: ["phone-format-check"] },
   { slug: "password-len-check", titleJa: "パスワード文字数チェック", descriptionJa: "パスワードの長さと強度を判定します。", category: "other", relatedSlugs: ["mynumber-check"] },
-  { slug: "holiday-list", titleJa: "祝日一覧表示", descriptionJa: "指定した年の日本の祝日を表示します。", category: "other", relatedSlugs: ["bank-business-day"] },
+  {
+    slug: "holiday-list",
+    titleJa: "日本の祝日確認",
+    pageTitleJa: "日本の祝日確認｜日付検索と年別一覧",
+    descriptionJa: "指定日の祝日判定と年別の日本の祝日一覧を確認します。",
+    introLines: [
+      "指定した日付が日本の祝日にあたるかを確認できます。",
+      "年別の祝日一覧も表示できるため、営業日や予定の確認に使えます。",
+    ],
+    category: "other",
+    relatedSlugs: ["bank-business-day", "working-days-count", "next-business-day"],
+  },
 
   // ⑦ 時間系シンプル (2)
   { slug: "simple-timer", titleJa: "簡易タイマー", descriptionJa: "シンプルなキッチンタイマーです。", category: "time", relatedSlugs: ["stopwatch"] },
   { slug: "stopwatch", titleJa: "ストップウォッチ", descriptionJa: "経過時間を計測するシンプルなストップウォッチです。", category: "time", relatedSlugs: ["simple-timer"] },
 
-  // ⑧ YouTube補助 (4)
-  { slug: "yt-thumb-download", titleJa: "YouTubeサムネイル取得", descriptionJa: "動画URLからサムネイル画像を抽出します。", category: "youtube", relatedSlugs: ["yt-url-shorten"] },
-  { slug: "yt-url-shorten", titleJa: "YouTube URL短縮", descriptionJa: "長いURLを短い形式に整えます。", category: "youtube", relatedSlugs: ["yt-video-id"] },
-  { slug: "yt-video-id", titleJa: "YouTube動画ID確認", descriptionJa: "URLから動画固有のIDを抽出します。", category: "youtube", relatedSlugs: ["yt-embed-gen"] },
-  { slug: "yt-embed-gen", titleJa: "YouTube埋め込みコード生成", descriptionJa: "ブログ等に貼る埋め込み用HTMLを作成します。", category: "youtube", relatedSlugs: ["yt-thumb-download"] },
+  // ⑧ YouTube補助
+  { slug: "yt-thumb-download", titleJa: "YouTubeサムネイル取得", descriptionJa: "動画URLからサムネイル画像を抽出します。", category: "youtube", relatedSlugs: ["yt-video-id", "yt-url-shorten", "yt-embed-gen"] },
+  { slug: "yt-url-shorten", titleJa: "YouTube URL短縮", descriptionJa: "長いURLを短い形式に整えます。", category: "youtube", relatedSlugs: ["yt-video-id", "yt-timestamp-generator", "yt-embed-gen"] },
+  { slug: "yt-video-id", titleJa: "YouTube動画ID確認", descriptionJa: "URLから動画固有のIDを抽出します。", category: "youtube", relatedSlugs: ["yt-url-shorten", "yt-thumb-download", "yt-channel-id"] },
+  { slug: "yt-embed-gen", titleJa: "YouTube埋め込みコード生成", descriptionJa: "ブログ等に貼る埋め込み用HTMLを作成します。", category: "youtube", relatedSlugs: ["yt-video-id", "yt-thumb-download", "yt-timestamp-generator"] },
+  {
+    slug: "yt-timestamp-generator",
+    titleJa: "YouTubeタイムスタンプURL生成",
+    pageTitleJa: "YouTubeタイムスタンプURL生成｜指定時間から再生するリンクを作成",
+    descriptionJa: "指定した時間から再生できるYouTube URLを作成します。",
+    introLines: [
+      "YouTube動画のURLと時間を入力して、指定時間から再生できるリンクを作成できます。",
+      "動画の一部分を共有したいときに使えます。",
+    ],
+    category: "youtube",
+    relatedSlugs: ["yt-url-shorten", "yt-video-id", "yt-embed-gen"],
+  },
+  {
+    slug: "yt-playlist-id",
+    titleJa: "YouTube再生リストID確認",
+    pageTitleJa: "YouTube再生リストID確認｜URLからplaylist IDを抽出",
+    descriptionJa: "YouTube再生リストURLからIDを抽出します。",
+    introLines: [
+      "YouTube再生リストのURLから、listパラメータのIDを取り出します。",
+      "埋め込みやURL整理で再生リストIDだけを確認したいときに使えます。",
+    ],
+    category: "youtube",
+    relatedSlugs: ["yt-video-id", "yt-url-shorten", "yt-channel-id"],
+  },
+  {
+    slug: "yt-channel-id",
+    titleJa: "YouTubeチャンネルID確認",
+    pageTitleJa: "YouTubeチャンネルID確認｜チャンネルURLからIDを抽出",
+    descriptionJa: "YouTubeチャンネルURLに含まれるチャンネルIDを抽出します。",
+    introLines: [
+      "YouTubeのチャンネルURLから、URLに含まれるチャンネルIDを取り出します。",
+      "@ハンドルからの検索は行わず、入力されたURL内の情報だけを確認します。",
+    ],
+    category: "youtube",
+    relatedSlugs: ["yt-video-id", "yt-playlist-id", "yt-url-shorten"],
+  },
 ]
 
 export function getTool(slug: string): Tool | undefined {

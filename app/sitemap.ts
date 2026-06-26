@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { guides } from "@/lib/guides"
 import { tools } from "@/lib/tools"
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -6,9 +7,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const priorityToolSlugs = new Set([
     "bank-business-day",
     "working-days-count",
+    "next-business-day",
+    "payment-due-date",
+    "date-diff",
+    "age-calculator",
+    "week-number",
+    "fiscal-year-calculator",
+    "holiday-list",
     "unit-converter",
     "mojisuu-count",
     "zenkaku-hankaku",
+    "char-code-checker",
+    "tsv-csv-converter",
+    "csv-formatter",
+    "csv-sort",
+    "csv-quote-escape",
+    "csv-column-extract",
+    "csv-duplicate-remover",
+    "csv-merge",
+    "csv-split",
+    "json-csv-converter",
+    "yt-video-id",
+    "yt-url-shorten",
+    "yt-timestamp-generator",
+    "yt-playlist-id",
+    "yt-channel-id",
   ])
 
   // 1. Dynamic Tool Pages
@@ -40,12 +63,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
+  const guideUrls = guides.map((guide) => ({
+    url: `${base}/guides/${guide.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }))
+
   // 3. Static Policy & Info Pages
-  const staticPages = ["about", "privacy", "terms", "contact", "blog"].map((page) => ({
+  const staticPages = ["about", "privacy", "terms", "contact", "blog", "guides"].map((page) => ({
     url: `${base}/${page}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
-    priority: page === "blog" ? 0.9 : 0.5, // Blog index gets higher priority than policies
+    priority: page === "guides" ? 0.7 : page === "blog" ? 0.6 : 0.5,
   }))
 
   return [
@@ -58,6 +88,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...staticPages,
     ...blogUrls,
+    ...guideUrls,
     ...toolUrls,
   ]
 }

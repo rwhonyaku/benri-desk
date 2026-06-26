@@ -14,6 +14,7 @@ export default function SiteFooter() {
           <div className="flex flex-col sm:items-end">
             <nav className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-neutral-400 sm:justify-end">
               <Link href="/" className="hover:text-neutral-900 transition-colors">ホーム</Link>
+              <Link href="/guides" className="hover:text-neutral-900 transition-colors">ガイド</Link>
               <Link href="/about" className="hover:text-neutral-900 transition-colors">運営情報</Link>
               <Link href="/privacy" className="hover:text-neutral-900 transition-colors">プライバシーポリシー</Link>
               <Link href="/terms" className="hover:text-neutral-900 transition-colors">利用規約</Link>

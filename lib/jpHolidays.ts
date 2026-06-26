@@ -161,3 +161,14 @@ export function getJpHolidayName(ymd: YMD): string | null {
 export function isJpHoliday(ymd: YMD) {
   return getJpHolidayName(ymd) !== null
 }
+
+export function getJpHolidaysForYear(year: number) {
+  if (year < 2020 || year > 2035) return []
+
+  const base = baseHolidaysForYear(year)
+  const full = applySubstituteAndCitizens(year, base)
+
+  return Array.from(full.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, name]) => ({ date, name }))
+}

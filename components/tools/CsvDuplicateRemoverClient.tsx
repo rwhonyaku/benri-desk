@@ -1,15 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import { parseDelimitedRows, stringifyDelimitedRows } from "@/lib/csvUtils"
 
 export default function CsvDuplicateRemoverClient() {
   const [csv, setCsv] = useState("")
 
   const handleRemove = () => {
     if (!csv.trim()) return
-    const lines = csv.split(/\r?\n/)
-    const unique = Array.from(new Set(lines.map(l => l.trim()))).filter(l => l !== "")
-    setCsv(unique.join("\n"))
+    const rows = parseDelimitedRows(csv)
+    const seen = new Set<string>()
+    const uniqueRows = rows.filter((row) => {
+      const key = JSON.stringify(row.map((cell) => cell.trim()))
+      if (seen.has(key)) return false
+      seen.add(key)
+      return row.some((cell) => cell.trim() !== "")
+    })
+    setCsv(stringifyDelimitedRows(uniqueRows))
   }
 
   return (
