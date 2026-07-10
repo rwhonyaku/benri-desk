@@ -92,6 +92,18 @@ export const tools: Tool[] = [
   { slug: "line-numbering", titleJa: "連番付与（行頭／行末）", descriptionJa: "各行に1, 2, 3...と連番を付与します。", category: "text", relatedSlugs: ["line-count"] },
   { slug: "newline-code-converter", titleJa: "改行コード変換（LF/CRLF）", descriptionJa: "OSによる改行コードの違いを変換します。", category: "text", relatedSlugs: ["kaigyo-cleaner"] },
   { slug: "text-diff", titleJa: "テキスト差分比較（簡易）", descriptionJa: "2つの文章を比較して違いを表示します。", category: "text", relatedSlugs: ["kaigyo-cleaner"] },
+  {
+    slug: "regex-tester",
+    titleJa: "正規表現テスター",
+    pageTitleJa: "正規表現テスター｜一致箇所と置換結果を確認",
+    descriptionJa: "正規表現の一致箇所や置換結果を確認します。",
+    introLines: [
+      "正規表現のパターンを入力して、テスト文字列に一致する箇所を確認できます。",
+      "置換結果も確認できるため、実際に使う前の動作確認に便利です。",
+    ],
+    category: "text",
+    relatedSlugs: ["text-diff", "line-count", "mojisuu-count"],
+  },
 
   // ② 日付・時間・営業日
   { slug: "date-with-weekday", titleJa: "曜日付き日付変換", descriptionJa: "日付を入力すると曜日と和暦を表示します。", category: "date", relatedSlugs: ["week-number", "date-diff", "wareki-to-seireki"] },

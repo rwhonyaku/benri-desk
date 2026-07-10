@@ -19,11 +19,35 @@ const CATEGORY_GUIDE_LINKS: Partial<Record<(typeof CATEGORIES)[number]["id"], { 
       href: "/guides/zenkaku-hankaku-difference",
       label: "全角・半角の違い",
     },
+    {
+      href: "/guides/character-count-byte-count",
+      label: "文字数とバイト数の違い",
+    },
+    {
+      href: "/guides/regex-basics",
+      label: "正規表現（Regex）とは？",
+    },
   ],
   date: [
     {
       href: "/guides/business-day-meaning",
       label: "営業日とは？平日・稼働日との違い",
+    },
+    {
+      href: "/guides/iso-8601-date-format",
+      label: "ISO 8601とは？日付フォーマットの基本",
+    },
+    {
+      href: "/guides/japanese-holidays-business-days",
+      label: "日本の祝日とは？営業日との関係",
+    },
+    {
+      href: "/guides/bank-business-day-meaning",
+      label: "銀行営業日とは？",
+    },
+    {
+      href: "/guides/business-days-within-meaning",
+      label: "「○営業日以内」とは？",
     },
   ],
   network: [
@@ -31,17 +55,113 @@ const CATEGORY_GUIDE_LINKS: Partial<Record<(typeof CATEGORIES)[number]["id"], { 
       href: "/guides/character-encoding-meaning",
       label: "文字コードとは？UTF-8・Shift_JIS・Unicodeの違い",
     },
+    {
+      href: "/guides/unicode-meaning",
+      label: "Unicodeとは？UTF-8との違い",
+    },
+    {
+      href: "/guides/url-encoding-meaning",
+      label: "URLエンコードとは？",
+    },
   ],
   dev: [
     {
       href: "/guides/csv-tsv-difference",
       label: "CSVとTSVの違い",
     },
+    {
+      href: "/guides/csv-open-excel",
+      label: "CSVをExcelで開く方法",
+    },
+    {
+      href: "/guides/csv-formatting",
+      label: "CSV整形とは？引用符・改行の扱い",
+    },
+    {
+      href: "/guides/csv-column-extract",
+      label: "CSV列抽出とは？必要な列だけを取り出す",
+    },
+    {
+      href: "/guides/csv-duplicate-removal",
+      label: "CSV重複削除とは？同じ行を整理する",
+    },
+    {
+      href: "/guides/csv-sort",
+      label: "CSVソートとは？指定列で並び替える",
+    },
+    {
+      href: "/guides/json-csv-difference",
+      label: "JSONとは？CSVとの違い",
+    },
+    {
+      href: "/guides/csv-mojibake-fix",
+      label: "CSVが文字化けする原因と対処法",
+    },
   ],
   calc: [
     {
       href: "/guides/unit-conversion-meaning",
       label: "単位換算とは？長さ・重さ・温度の単位",
+    },
+    {
+      href: "/guides/file-size-units",
+      label: "ファイルサイズとは？KB・MB・GBの違い",
+    },
+    {
+      href: "/guides/temperature-units",
+      label: "温度の単位とは？摂氏・華氏・ケルビン",
+    },
+    {
+      href: "/guides/length-units",
+      label: "長さの単位とは？mm・cm・m・km",
+    },
+    {
+      href: "/guides/weight-units",
+      label: "重さの単位とは？mg・g・kg・lb",
+    },
+    {
+      href: "/guides/area-units",
+      label: "面積の単位とは？平方メートル・坪",
+    },
+    {
+      href: "/guides/volume-units",
+      label: "体積・容量の単位とは？ml・L・m³",
+    },
+    {
+      href: "/guides/speed-units",
+      label: "速度の単位とは？m/s・km/h・mph",
+    },
+    {
+      href: "/guides/pressure-units",
+      label: "圧力の単位とは？Pa・kPa・psi",
+    },
+    {
+      href: "/guides/energy-units",
+      label: "エネルギーの単位とは？J・kcal・kWh",
+    },
+    {
+      href: "/guides/power-units",
+      label: "仕事率・電力の単位とは？W・kW・馬力",
+    },
+    {
+      href: "/guides/cooking-conversions",
+      label: "料理の単位換算とは？小さじ・大さじ",
+    },
+    {
+      href: "/guides/time-units",
+      label: "時間の単位とは？秒・分・時間・日",
+    },
+  ],
+  other: [
+    {
+      href: "/guides/postal-code-address-lookup",
+      label: "郵便番号から住所を調べる仕組み",
+    },
+  ],
+  youtube: [
+    {
+      href: "/guides/youtube-url-types",
+      label: "YouTube URLの種類と違い",
     },
   ],
 }

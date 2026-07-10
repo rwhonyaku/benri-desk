@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "unit-converter",
     "mojisuu-count",
     "zenkaku-hankaku",
+    "regex-tester",
     "char-code-checker",
     "tsv-csv-converter",
     "csv-formatter",

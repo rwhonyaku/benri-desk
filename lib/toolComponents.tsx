@@ -20,6 +20,7 @@ export const toolComponents: Record<string, ComponentType<any>> = {
   "line-numbering": dynamic(() => import("@/components/tools/LineNumberingClient")),
   "newline-code-converter": dynamic(() => import("@/components/tools/NewlineCodeConverterClient")),
   "text-diff": dynamic(() => import("@/components/tools/TextDiffClient")),
+  "regex-tester": dynamic(() => import("@/components/tools/RegexTesterClient")),
 
   // ② 日付・時間・営業日
   "date-with-weekday": dynamic(() => import("@/components/tools/DateWithWeekdayClient")),
