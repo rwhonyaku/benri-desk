@@ -665,14 +665,14 @@ export const guides: Guide[] = [
   },
   {
     slug: "youtube-url-types",
-    title: "YouTube URLの種類とは？通常URL・短縮URL・埋め込みURLの違い",
+    title: "YouTube URLの種類とは？通常URL・短縮URL・埋め込みURL・再生リストURLの違い",
     description:
-      "YouTubeの通常URL・短縮URL・埋め込みURLの違いや、動画IDの確認方法をわかりやすく解説します。",
+      "YouTubeの通常URL・短縮URL・埋め込みURL・再生リストURLの違いや、動画ID・再生リストIDの確認方法を解説します。",
     categoryHref: "/#youtube",
     categoryLabel: "YouTube補助",
     lead: [
-      "YouTubeのURLには、通常の動画URL、短縮URL、埋め込みURLなど、いくつかの形式があります。",
-      "見た目は違っても、同じ動画を指している場合があります。URLの種類を理解しておくと、共有や埋め込み、動画IDの確認がしやすくなります。",
+      "YouTubeのURLには、通常の動画URL、短縮URL、埋め込みURL、再生リストURLなど、いくつかの形式があります。",
+      "見た目は違っても、同じ動画や再生リストを指している場合があります。URLの種類を理解しておくと、共有や埋め込み、動画ID・再生リストIDの確認がしやすくなります。",
     ],
     sections: [
       {
@@ -722,6 +722,14 @@ export const guides: Guide[] = [
         },
       },
       {
+        heading: "再生リストURL",
+        body: [
+          "再生リストURLは、複数の動画をまとめた再生リストを開くためのURLです。",
+          "再生リストIDは、URL内の「list=」の後ろに入っています。動画URLにlistパラメータが付いている場合、その動画が含まれる再生リストを表していることがあります。",
+        ],
+        code: "https://www.youtube.com/playlist?list=PLXXXXXXXXXXX",
+      },
+      {
         heading: "タイムスタンプ付きURL",
         body: [
           "動画の途中から再生したい場合は、URLに時間指定を付けることがあります。",
@@ -737,6 +745,7 @@ export const guides: Guide[] = [
           "短く共有したい：短縮URL",
           "Webページに表示したい：埋め込みURLまたは埋め込みコード",
           "途中から再生したい：タイムスタンプ付きURL",
+          "再生リストを確認したい：再生リストURL",
           "IDだけを確認したい：動画ID確認ツール",
         ],
       },
@@ -765,6 +774,11 @@ export const guides: Guide[] = [
         question: "YouTubeの動画IDはどこにありますか？",
         answer:
           "通常URLでは「v=」の後ろ、短縮URLでは「youtu.be/」の後ろ、埋め込みURLでは「embed/」の後ろにあります。",
+      },
+      {
+        question: "YouTubeの再生リストIDはどこにありますか？",
+        answer:
+          "再生リストIDは、URL内の「list=」の後ろにあります。再生リストURLや、再生リスト内の動画URLに含まれることがあります。",
       },
       {
         question: "埋め込みURLをそのまま共有してもよいですか？",
@@ -797,6 +811,11 @@ export const guides: Guide[] = [
         href: "/tools/yt-timestamp-generator",
         label: "YouTubeタイムスタンプURL生成",
         description: "指定時間から再生するURLを作成できます。",
+      },
+      {
+        href: "/tools/yt-playlist-id",
+        label: "YouTube再生リストID確認",
+        description: "再生リストURLからlistパラメータのIDを取り出せます。",
       },
     ],
     relatedGuides: [],
@@ -1651,8 +1670,8 @@ export const guides: Guide[] = [
     relatedGuides: [
       {
         href: "/guides/business-day-counting",
-        label: "稼働日とは？営業日との違い",
-        description: "営業日前や第一営業日の数え方を確認できます。",
+        label: "稼働日とは？営業日・平日との違い",
+        description: "稼働日の意味と、営業日・第一営業日の数え方を確認できます。",
       },
       {
         href: "/guides/business-day-meaning",
@@ -4936,6 +4955,7 @@ export const guides: Guide[] = [
     categoryLabel: "計算・変換ツール",
     lead: [
       "圧力の単位には、Pa、kPa、MPa、bar、atm、psiなどがあります。",
+      "よく使う目安は、1MPa = 1000kPa = 1,000,000Pa、1bar = 100kPaです。",
       "タイヤの空気圧、気圧、機械や設備の仕様、海外製品の説明などで見かけることがあります。",
       "圧力をすばやく換算したい場合は、当サイトの単位換算ツールをご利用ください。",
     ],
@@ -4972,7 +4992,8 @@ export const guides: Guide[] = [
       {
         heading: "bar・atm・psiとは",
         body: [
-          "bar、atm、psiは、空気圧や海外製品の仕様で見かけることがある単位です。",
+          "barは圧力の単位で、1barは100kPaです。タイヤの空気圧や海外製品の仕様で見かけることがあります。",
+          "atmは標準気圧を基準にした単位で、1atmは約101.325kPaです。",
           "psiはアメリカなどでタイヤ空気圧や工具の仕様に使われることがあります。",
         ],
         list: ["1bar = 100kPa", "1atm = 約101.325kPa", "1psi = 約6.895kPa"],
@@ -5033,6 +5054,15 @@ export const guides: Guide[] = [
       {
         question: "1MPaは何kPaですか？",
         answer: "1MPaは1000kPaです。",
+      },
+      {
+        question: "1MPaは何Paですか？",
+        answer: "1MPaは1,000,000Paです。",
+      },
+      {
+        question: "barとは何の単位ですか？",
+        answer:
+          "barは圧力の単位です。タイヤの空気圧や海外製品の仕様で使われることがあり、1barは100kPaです。",
       },
       {
         question: "1barは何kPaですか？",
