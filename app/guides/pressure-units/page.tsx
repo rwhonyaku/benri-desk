@@ -7,17 +7,17 @@ const slug = "pressure-units"
 
 export const metadata: Metadata = {
   title: {
-    absolute: "圧力の単位とは？Pa・kPa・MPa・bar・atm・psiの違い",
+    absolute: "圧力の単位とは？bar・psi・MPa・kPaの違いと換算",
   },
   description:
-    "圧力の単位であるPa・kPa・MPa・bar・atm・psiの違いや、空気圧・気圧・技術資料で使う換算例を解説します。",
+    "圧力の単位であるbar・psi・MPa・kPa・Paの違いや、1bar・1psi・1MPaの換算例をわかりやすく解説します。",
   alternates: {
     canonical: `/guides/${slug}`,
   },
   openGraph: {
-    title: "圧力の単位とは？Pa・kPa・MPa・bar・atm・psiの違い",
+    title: "圧力の単位とは？bar・psi・MPa・kPaの違いと換算",
     description:
-      "圧力の単位であるPa・kPa・MPa・bar・atm・psiの違いや、空気圧・気圧・技術資料で使う換算例を解説します。",
+      "圧力の単位であるbar・psi・MPa・kPa・Paの違いや、1bar・1psi・1MPaの換算例をわかりやすく解説します。",
     url: `https://benri-desk.com/guides/${slug}`,
   },
 }
