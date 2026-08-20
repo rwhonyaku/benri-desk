@@ -56,15 +56,15 @@ export const tools: Tool[] = [
     pageTitleJa: "全角⇄半角変換・チェック｜英数字・カナ・記号をすばやく変換",
     descriptionJa: "英数字・カタカナ・記号の全角/半角を確認しながら相互変換します。", 
     introLines: [
-      "英数字・カタカナ・記号の全角と半角を確認しながら、まとめて変換できるツールです。",
-      "フォーム入力前の整形や、社内システムの表記ルール合わせに使えます。",
-      "住所の番地だけ半角にしたいときや、フリガナを全角にそろえたいときに便利です。",
+      "日本のWebフォームで「全角で入力してください」「半角数字で入力してください」と表示されたときに、文字をまとめて変換できます。",
+      "住所・氏名・フリガナの入力前や、社内システムの表記ルール合わせに使えます。",
+      "変換しても提出先で受け付けられることを保証するものではないため、入力欄の案内もあわせてご確認ください。",
     ],
     category: "text", 
     relatedSlugs: ["kana-converter", "mojisuu-count", "whitespace-cleaner"],
     articleHtml: `
-      <h3>日本の商習慣に合わせたデータ整形</h3>
-      <p>「住所の番地は半角で」「氏名フリガナは全角で」といった、日本独自の入力ルールに対応するための変換ツールです。英数字、カタカナ、記号をそれぞれ個別に指定して変換できます。</p>
+      <h3>日本のWebフォーム入力前に文字を整える</h3>
+      <p>住所、氏名、フリガナ、電話番号などで「数字は半角」「カタカナは全角」と指定されたときに使える変換ツールです。英数字、カタカナ、記号・スペースを個別に指定して変換できます。</p>
     `
   },
   { slug: "kana-converter", titleJa: "ひらがな⇄カタカナ変換", descriptionJa: "ひらがなとカタカナを相互に変換します。", category: "text", relatedSlugs: ["zenkaku-hankaku"] },
@@ -240,7 +240,18 @@ export const tools: Tool[] = [
   { slug: "query-parser", titleJa: "クエリパラメータ分解", descriptionJa: "URLのパラメータをリスト形式で表示します。", category: "network", relatedSlugs: ["url-encode"] },
   { slug: "mime-type-checker", titleJa: "MIMEタイプ確認", descriptionJa: "拡張子から適切なMIMEタイプを調べます。", category: "network", relatedSlugs: ["char-code-checker"] },
   { slug: "dns-lookup", titleJa: "DNSレコード確認", descriptionJa: "ドメインの公開情報を確認します。", category: "network", relatedSlugs: ["ip-check"] },
-  { slug: "char-code-checker", titleJa: "文字コード確認", descriptionJa: "UTF-8やSJISなどのエンコードを確認します。", category: "network", relatedSlugs: ["mime-type-checker"] },
+  {
+    slug: "char-code-checker",
+    titleJa: "Unicodeコードポイント確認",
+    pageTitleJa: "Unicodeコードポイント確認｜文字のU+番号を調べる",
+    descriptionJa: "入力した文字のUnicodeコードポイントを確認します。",
+    introLines: [
+      "文字を入力すると、各文字に割り当てられたUnicodeコードポイントを表示します。",
+      "見た目が似ている文字や、コピーした記号の違いを確認したいときに使えます。",
+    ],
+    category: "network",
+    relatedSlugs: ["mime-type-checker", "zenkaku-hankaku"],
+  },
 
   // ④ CSV・データ処理
   {
@@ -270,7 +281,18 @@ export const tools: Tool[] = [
   },
   { slug: "csv-empty-line-cleaner", titleJa: "CSV空白行削除", descriptionJa: "データのない空行を除去します。", category: "dev", relatedSlugs: ["csv-header-remover", "csv-row-count", "csv-formatter"] },
   { slug: "csv-header-remover", titleJa: "CSVヘッダー削除", descriptionJa: "1行目の見出し行を削除します。", category: "dev", relatedSlugs: ["csv-column-extract", "csv-sort", "csv-formatter"] },
-  { slug: "tsv-csv-converter", titleJa: "TSV⇄CSV変換", descriptionJa: "タブ区切りとカンマ区切りを相互変換します。", category: "dev", relatedSlugs: ["csv-formatter", "csv-quote-escape", "csv-column-extract"] },
+  {
+    slug: "tsv-csv-converter",
+    titleJa: "TSV⇄CSV変換",
+    pageTitleJa: "TSV・CSV変換｜タブ区切りとカンマ区切りを相互変換",
+    descriptionJa: "TSV（タブ区切り）とCSV（カンマ区切り）を相互変換します。",
+    introLines: [
+      "タブ区切りのTSVをカンマ区切りのCSVへ、CSVをTSVへ相互変換できます。",
+      "表計算ソフトからコピーしたデータや、システムへ取り込む前の区切り文字変換に使えます。",
+    ],
+    category: "dev",
+    relatedSlugs: ["csv-formatter", "csv-quote-escape", "csv-column-extract"],
+  },
   {
     slug: "csv-formatter",
     titleJa: "CSV整形ツール",
@@ -286,7 +308,7 @@ export const tools: Tool[] = [
   {
     slug: "csv-sort",
     titleJa: "CSVソート",
-    pageTitleJa: "CSVソート｜指定した列でCSV行を並び替え",
+    pageTitleJa: "CSVソート｜指定列で昇順・降順に並び替える無料ツール",
     descriptionJa: "指定した列を基準にCSV行を昇順・降順で並び替えます。",
     introLines: [
       "CSVデータを、指定した列番号を基準に並び替えるツールです。",

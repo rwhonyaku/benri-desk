@@ -7,17 +7,17 @@ const slug = "csv-sort"
 
 export const metadata: Metadata = {
   title: {
-    absolute: "CSVソートとは？指定した列で行を並び替える方法を解説",
+    absolute: "CSVソートの方法｜指定列で昇順・降順に並び替える",
   },
   description:
-    "CSVを指定した列でソートする基本と、昇順・降順、見出し行、数値と文字列の並び順の注意点を解説します。",
+    "CSVを指定した列で昇順・降順に並び替える方法を解説します。見出し行や数値の扱いを確認し、そのまま無料ツールでソートできます。",
   alternates: {
     canonical: `/guides/${slug}`,
   },
   openGraph: {
-    title: "CSVソートとは？指定した列で行を並び替える方法を解説",
+    title: "CSVソートの方法｜指定列で昇順・降順に並び替える",
     description:
-      "CSVを指定した列でソートする基本と、昇順・降順、見出し行、数値と文字列の並び順の注意点を解説します。",
+      "CSVを指定した列で昇順・降順に並び替える方法を解説します。見出し行や数値の扱いを確認し、そのまま無料ツールでソートできます。",
     url: `https://benri-desk.com/guides/${slug}`,
   },
 }

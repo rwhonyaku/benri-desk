@@ -78,6 +78,12 @@ export default function ZenkakuHankakuClient() {
   const [kana, setKana] = useState(true)
   const [symbols, setSymbols] = useState(true)
   const [copyMsg, setCopyMsg] = useState<string | null>(null)
+  const [showSpaceCheck, setShowSpaceCheck] = useState(false)
+
+  const spaceCounts = useMemo(() => ({
+    hankaku: Array.from(input).filter((char) => char === " ").length,
+    zenkaku: Array.from(input).filter((char) => char === "　").length,
+  }), [input])
 
   const output = useMemo(
     () => normalize(input, mode, { alnum, kana, symbols }),
@@ -95,8 +101,54 @@ export default function ZenkakuHankakuClient() {
     }
   }
 
+  const applyPreset = (preset: "alnumHankaku" | "kanaZenkaku" | "allZenkaku") => {
+    setShowSpaceCheck(false)
+    if (preset === "alnumHankaku") {
+      setMode("toHankaku")
+      setAlnum(true)
+      setKana(false)
+      setSymbols(false)
+      return
+    }
+    if (preset === "kanaZenkaku") {
+      setMode("toZenkaku")
+      setAlnum(false)
+      setKana(true)
+      setSymbols(false)
+      return
+    }
+    setMode("toZenkaku")
+    setAlnum(true)
+    setKana(true)
+    setSymbols(true)
+  }
+
   return (
     <div className="space-y-6">
+      <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-5">
+        <div className="text-sm font-bold text-neutral-800">フォーム入力向け設定</div>
+        <p className="mt-1 text-xs leading-6 text-neutral-600">目的に近い設定を選び、変換する文字を貼り付けてください。</p>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+          <button type="button" onClick={() => applyPreset("alnumHankaku")} className="rounded-lg border border-neutral-200 bg-white px-4 py-3 text-left text-xs font-bold text-neutral-700 transition-colors hover:border-blue-300 hover:text-blue-700">
+            数字・英字を半角にする
+          </button>
+          <button type="button" onClick={() => applyPreset("kanaZenkaku")} className="rounded-lg border border-neutral-200 bg-white px-4 py-3 text-left text-xs font-bold text-neutral-700 transition-colors hover:border-blue-300 hover:text-blue-700">
+            カタカナを全角にする
+          </button>
+          <button type="button" onClick={() => applyPreset("allZenkaku")} className="rounded-lg border border-neutral-200 bg-white px-4 py-3 text-left text-xs font-bold text-neutral-700 transition-colors hover:border-blue-300 hover:text-blue-700">
+            記号・スペースを含めて全角にする
+          </button>
+          <button type="button" onClick={() => setShowSpaceCheck((current) => !current)} className="rounded-lg border border-neutral-200 bg-white px-4 py-3 text-left text-xs font-bold text-neutral-700 transition-colors hover:border-blue-300 hover:text-blue-700">
+            半角・全角スペースを確認する
+          </button>
+        </div>
+        {showSpaceCheck && (
+          <div className="mt-3 rounded-lg bg-white px-4 py-3 text-xs text-neutral-700" aria-live="polite">
+            半角スペース：{spaceCounts.hankaku}個 ／ 全角スペース：{spaceCounts.zenkaku}個
+          </div>
+        )}
+      </div>
+
       {/* Control Panel */}
       <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -145,13 +197,13 @@ export default function ZenkakuHankakuClient() {
         <div className="space-y-2">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-bold text-neutral-800 uppercase tracking-tight">変換前テキスト</span>
-            <button onClick={() => setInput("")} className="text-[10px] font-bold text-rose-500 hover:underline uppercase">Clear</button>
+            <button onClick={() => setInput("")} className="text-[10px] font-bold text-rose-500 hover:underline">クリア</button>
           </div>
           <textarea
-            className="h-80 w-full rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-800 outline-none transition-all focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
+            className="h-52 w-full rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-800 outline-none transition-all focus:border-blue-400 focus:ring-4 focus:ring-blue-50 md:h-80"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="ここに変換したいテキストを入力してください..."
+            placeholder="例：１２３－４５６７"
             spellCheck={false}
           />
         </div>
@@ -160,13 +212,13 @@ export default function ZenkakuHankakuClient() {
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-bold text-neutral-800 uppercase tracking-tight">変換後テキスト</span>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-neutral-400 font-mono">{output.length} chars</span>
+              <span className="text-[10px] text-neutral-400">{Array.from(output).length}文字</span>
               {copyMsg && <span className="text-[10px] font-bold text-emerald-600 animate-in fade-in slide-in-from-right-2">{copyMsg}</span>}
             </div>
           </div>
           <div className="relative group h-full">
             <textarea
-              className="h-80 w-full rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-600 outline-none resize-none font-sans"
+              className="h-52 w-full rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-600 outline-none resize-none font-sans md:h-80"
               value={output}
               readOnly
               spellCheck={false}
@@ -184,8 +236,8 @@ export default function ZenkakuHankakuClient() {
         </div>
       </div>
 
-      <div className="rounded-lg bg-neutral-100 px-4 py-3 text-[10px] text-neutral-400 text-center uppercase tracking-tighter">
-        Data processing is performed locally in your browser. Original text is never stored.
+      <div className="rounded-lg bg-neutral-100 px-4 py-3 text-center text-[11px] text-neutral-500">
+        入力内容はブラウザ内で処理され、保存されません。
       </div>
     </div>
   )

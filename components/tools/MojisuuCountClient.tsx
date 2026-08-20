@@ -41,6 +41,7 @@ function utf8ByteLength(s: string) {
 export default function MojisuuCountClient() {
   const [input, setInput] = useState("")
   const [includeNewlines, setIncludeNewlines] = useState(true)
+  const [limitInput, setLimitInput] = useState("")
   const [copyMsg, setCopyMsg] = useState<string | null>(null)
 
   const counts = useMemo(() => {
@@ -61,6 +62,9 @@ export default function MojisuuCountClient() {
     }
   }, [input, includeNewlines])
 
+  const characterLimit = /^\d+$/.test(limitInput) && Number(limitInput) > 0 ? Number(limitInput) : null
+  const remaining = characterLimit === null ? null : characterLimit - counts.totalChars
+
   const copyResults = async () => {
     const z = Number.isInteger(counts.zenkakuEq) ? counts.zenkakuEq : counts.zenkakuEq.toFixed(1)
     const summary = [
@@ -69,6 +73,7 @@ export default function MojisuuCountClient() {
       `全角換算: ${z}`,
       `バイト数 (UTF-8): ${counts.bytes.toLocaleString()}`,
       `行数: ${counts.lines.toLocaleString()}`,
+      ...(characterLimit === null ? [] : [`文字数上限: ${characterLimit.toLocaleString()}`, `残り文字数: ${remaining?.toLocaleString()}`]),
     ].join("\n")
 
     try {
@@ -110,6 +115,31 @@ export default function MojisuuCountClient() {
           spellCheck={false}
         />
 
+        <div className="mt-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+          <label htmlFor="character-limit" className="block text-xs font-bold text-neutral-700">
+            文字数上限（任意）
+          </label>
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input
+              id="character-limit"
+              type="number"
+              min="1"
+              inputMode="numeric"
+              className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50 sm:w-40"
+              value={limitInput}
+              onChange={(event) => setLimitInput(event.target.value)}
+              placeholder="例：500"
+            />
+            {remaining !== null && (
+              <p className={`text-sm font-bold ${remaining < 0 ? "text-rose-600" : "text-blue-700"}`} aria-live="polite">
+                {remaining < 0
+                  ? `${Math.abs(remaining).toLocaleString()}文字超過しています`
+                  : `残り${remaining.toLocaleString()}文字です`}
+              </p>
+            )}
+          </div>
+        </div>
+
         <button
           onClick={copyResults}
           disabled={!input}
@@ -118,6 +148,15 @@ export default function MojisuuCountClient() {
           {copyMsg || "結果をクリップボードにコピー"}
         </button>
       </div>
+
+      {remaining !== null && (
+        <div className={`rounded-xl border p-4 ${remaining < 0 ? "border-rose-200 bg-rose-50" : "border-blue-200 bg-blue-50"}`}>
+          <div className="text-[10px] font-bold tracking-wider text-neutral-500">文字数上限</div>
+          <div className={`mt-1 text-xl font-black ${remaining < 0 ? "text-rose-700" : "text-blue-700"}`}>
+            {counts.totalChars.toLocaleString()} / {characterLimit?.toLocaleString()}文字
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">

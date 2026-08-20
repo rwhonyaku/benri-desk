@@ -159,6 +159,22 @@ export default function GuidePageFrame({ guide }: { guide: Guide }) {
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
+
+        {guide.featuredTool && (
+          <GuideCardLink
+            item={guide.featuredTool}
+            className="group mt-7 block rounded-xl border border-blue-200 bg-blue-50/60 p-5 transition-colors hover:border-blue-400"
+          >
+            <div className="text-sm font-bold text-blue-700 group-hover:text-blue-800">
+              {guide.featuredTool.label} →
+            </div>
+            {guide.featuredTool.description && (
+              <p className="mt-2 text-xs leading-6 text-neutral-600">
+                {guide.featuredTool.description}
+              </p>
+            )}
+          </GuideCardLink>
+        )}
       </header>
 
       <article className="space-y-12">

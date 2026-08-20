@@ -33,7 +33,7 @@ export default function CsvSortClient() {
     <div className="mx-auto w-full max-w-3xl space-y-6">
       <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
         <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_auto_auto_auto] sm:items-center">
-          <label className="text-sm font-bold italic text-neutral-700">CSVデータを入力</label>
+          <label className="text-sm font-bold text-neutral-700">CSVデータを入力</label>
           <label className="flex items-center gap-2 text-xs font-bold text-neutral-600">
             <input
               type="checkbox"
@@ -71,7 +71,7 @@ export default function CsvSortClient() {
       {result && (
         <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-6">
           <div className="mb-2 flex items-center justify-between">
-            <label className="text-sm font-bold italic text-neutral-700">並び替え結果</label>
+            <label className="text-sm font-bold text-neutral-700">並び替え結果</label>
             <button
               onClick={() => navigator.clipboard.writeText(result)}
               className="text-xs font-bold text-blue-600 hover:text-blue-800"

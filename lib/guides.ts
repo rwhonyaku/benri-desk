@@ -37,6 +37,7 @@ export type Guide = {
   categoryHref: string
   categoryLabel: string
   lead: string[]
+  featuredTool?: GuideLink
   sections: GuideSection[]
   faqs: GuideFaq[]
   relatedTools: GuideLink[]
@@ -2163,9 +2164,9 @@ export const guides: Guide[] = [
   },
   {
     slug: "csv-sort",
-    title: "CSVソートとは？指定した列で行を並び替える方法を解説",
+    title: "CSVソートの方法｜指定列で昇順・降順に並び替える",
     description:
-      "CSVを指定した列でソートする基本と、昇順・降順、見出し行、数値と文字列の並び順の注意点を解説します。",
+      "CSVを指定した列で昇順・降順に並び替える方法を解説します。見出し行や数値の扱いを確認し、そのまま無料ツールでソートできます。",
     categoryHref: "/#dev",
     categoryLabel: "CSV・データ処理",
     lead: [
@@ -2173,6 +2174,11 @@ export const guides: Guide[] = [
       "商品一覧を価格順に並べる、名簿を名前順に並べる、日付順にログを整理するなど、一覧データを確認しやすくするときに使います。",
       "CSVを指定した列で並び替えたい場合は、当サイトのCSVソートをご利用ください。",
     ],
+    featuredTool: {
+      href: "/tools/csv-sort",
+      label: "CSVを指定列で並び替える",
+      description: "CSVを貼り付けて、列番号と昇順・降順を選ぶだけで処理できます。",
+    },
     sections: [
       {
         heading: "CSVソートとは",
@@ -3488,14 +3494,19 @@ export const guides: Guide[] = [
   },
   {
     slug: "csv-tsv-difference",
-    title: "CSVとTSVの違いとは？どちらを使うべきかをわかりやすく解説",
+    title: "CSVとTSVの違いとは？区切り文字と変換方法を解説",
     description:
-      "CSVとTSVの違いや、カンマ区切りとタブ区切りの使い分けをわかりやすく解説します。",
+      "CSVとTSVの違い、カンマ区切りとタブ区切りの使い分け、相互に変換する方法をわかりやすく解説します。",
     categoryHref: "/#dev",
     categoryLabel: "CSV・データ処理",
     lead: [
       "CSVとTSVは、どちらも表形式のデータを保存・交換するためのファイル形式です。違いは、各項目を区切る文字にあります。",
     ],
+    featuredTool: {
+      href: "/tools/tsv-csv-converter",
+      label: "CSVとTSVを相互変換する",
+      description: "カンマ区切りとタブ区切りをブラウザ内ですぐに変換できます。",
+    },
     sections: [
       {
         heading: "CSVとTSVの基本",

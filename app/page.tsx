@@ -13,6 +13,29 @@ const CATEGORIES = [
   { id: "youtube", name: "YouTube補助", icon: "📺" },
 ] as const
 
+const COMMON_TASKS = [
+  {
+    href: "/tools/zenkaku-hankaku",
+    label: "フォーム入力用に全角・半角をそろえる",
+    description: "英数字・カタカナ・記号を指定して変換",
+  },
+  {
+    href: "/tools/mojisuu-count",
+    label: "文章の文字数を確認する",
+    description: "全角・半角・バイト数もまとめて確認",
+  },
+  {
+    href: "/tools/tsv-csv-converter",
+    label: "CSVとTSVを相互変換する",
+    description: "カンマ区切りとタブ区切りを変換",
+  },
+  {
+    href: "/tools/working-days-count",
+    label: "土日祝を除いた営業日を数える",
+    description: "期間を指定して営業日数を計算",
+  },
+] as const
+
 const CATEGORY_GUIDE_LINKS: Partial<Record<(typeof CATEGORIES)[number]["id"], { href: string; label: string }[]>> = {
   text: [
     {
@@ -195,6 +218,29 @@ export default function HomePage() {
           <span className="text-lg">🇯🇵</span> 日本向けツール
         </div>
       </div>
+
+      <section className="mb-20" aria-labelledby="common-tasks-heading">
+        <div className="mb-6 flex items-center gap-4">
+          <h2 id="common-tasks-heading" className="text-lg font-extrabold tracking-tight text-neutral-900">
+            よく使われる作業
+          </h2>
+          <div className="h-px flex-1 bg-neutral-100" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {COMMON_TASKS.map((task) => (
+            <Link
+              key={task.href}
+              href={task.href}
+              className="group rounded-xl border border-neutral-200 bg-white p-5 transition-all hover:border-blue-400 hover:shadow-md active:scale-[0.99]"
+            >
+              <h3 className="text-sm font-bold text-neutral-900 transition-colors group-hover:text-blue-600">
+                {task.label}
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-neutral-500">{task.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* Categorized Tool Sections */}
       <div className="space-y-20">
