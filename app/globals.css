@@ -3,11 +3,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Keep calm, neutral, infrastructure-style defaults */
 :root {
   color-scheme: light;
+  --paper: #f3f0e8;
+  --ivory: #fffefa;
+  --sumi: #242722;
+  --stone: #d8d3c7;
+  --aizome: #285c61;
+  --persimmon: #c46a45;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--paper);
+}
+
+::selection {
+  background: #dceae6;
+  color: var(--sumi);
+}
+
+button,
+a {
+  text-underline-offset: 3px;
 }

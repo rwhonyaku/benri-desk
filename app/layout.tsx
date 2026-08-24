@@ -46,9 +46,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
         />
       </head>
-      <body className="min-h-dvh bg-[#f9fafb] text-neutral-900 selection:bg-blue-100 antialiased font-sans">
+      <body className="min-h-dvh bg-paper font-sans text-neutral-900 antialiased">
         {/* Navigation / Header */}
-        <header className="border-b border-neutral-200 bg-white">
+        <header className="border-b border-t-2 border-b-neutral-200 border-t-rose-500 bg-white">
           <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-5 py-5">
             <Link href="/" className="group flex flex-col gap-0.5">
               <div className="text-lg font-bold tracking-tight text-neutral-900 group-hover:text-blue-600 transition-colors">
@@ -61,8 +61,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <div className="flex items-center gap-2">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-60"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500"></span>
               </span>
               <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-tighter">
                 公開中
