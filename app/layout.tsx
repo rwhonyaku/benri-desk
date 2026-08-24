@@ -59,15 +59,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </Link>
 
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-60"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500"></span>
-              </span>
-              <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-tighter">
-                公開中
-              </span>
-            </div>
+            <nav aria-label="主要メニュー" className="flex items-center gap-5 text-xs font-bold text-neutral-600">
+              <Link href="/" className="transition-colors hover:text-blue-600">
+                ツール一覧
+              </Link>
+              <Link href="/guides" className="transition-colors hover:text-blue-600">
+                ガイド
+              </Link>
+            </nav>
           </div>
         </header>
 
