@@ -675,6 +675,11 @@ export const guides: Guide[] = [
       "YouTubeのURLには、通常の動画URL、短縮URL、埋め込みURL、再生リストURLなど、いくつかの形式があります。",
       "見た目は違っても、同じ動画や再生リストを指している場合があります。URLの種類を理解しておくと、共有や埋め込み、動画ID・再生リストIDの確認がしやすくなります。",
     ],
+    featuredTool: {
+      href: "/tools/yt-url-shorten",
+      label: "YouTube URLをyoutu.be形式に短縮する",
+      description: "動画URLを貼り付けると、共有用の短いURLへ整えられます。",
+    },
     sections: [
       {
         heading: "YouTube URLとは",
@@ -1288,6 +1293,11 @@ export const guides: Guide[] = [
       "日本の祝日は、法律で定められた休日で、学校や多くの会社、銀行などの休みに関係します。",
       "営業日を数えるときは、土曜日・日曜日だけでなく、祝日も除外することが多いため、祝日の確認は重要です。",
     ],
+    featuredTool: {
+      href: "/tools/holiday-list",
+      label: "日本の祝日を日付・年別に確認する",
+      description: "指定日の祝日判定と、その年の祝日一覧を確認できます。",
+    },
     sections: [
       {
         heading: "日本の祝日とは",
@@ -1414,6 +1424,11 @@ export const guides: Guide[] = [
       "銀行営業日とは、銀行の窓口業務が通常どおり行われる日のことです。",
       "一般的には土曜日・日曜日・祝日を除いた平日を指しますが、年末年始など銀行特有の休業日にも注意が必要です。",
     ],
+    featuredTool: {
+      href: "/tools/bank-business-day",
+      label: "指定日が銀行営業日か確認する",
+      description: "土日祝と12月31日〜1月3日を除く窓口営業日の目安を確認できます。",
+    },
     sections: [
       {
         heading: "銀行営業日とは",
@@ -1540,6 +1555,11 @@ export const guides: Guide[] = [
       "「2営業日以内」「3営業日以内」などの表現は、土曜日・日曜日・祝日などを除いた営業日を基準に、期限や予定日を表す言い方です。",
       "ただし、当日を含めて数えるか、翌営業日から数えるかはサービスや会社によって異なるため注意が必要です。",
     ],
+    featuredTool: {
+      href: "/tools/next-business-day",
+      label: "指定日から次の営業日を確認する",
+      description: "土日祝を飛ばして、翌営業日から先の日付を確認できます。",
+    },
     sections: [
       {
         heading: "「○営業日以内」とは",
@@ -1728,6 +1748,11 @@ export const guides: Guide[] = [
       "稼働日とは、社員・設備・システムなどが実際に動いている日のことです。営業日と似ていますが、外部向けに営業している日とは限りません。",
       "似た表現が多いため、「第一営業日」「○営業日前」「○営業日後」のような言い方は、土日祝をどう扱うかを確認して数えることが大切です。",
     ],
+    featuredTool: {
+      href: "/tools/working-days-count",
+      label: "期間内の営業日数を計算する",
+      description: "開始日と終了日を含め、土日祝を除いた日数を確認できます。",
+    },
     sections: [
       {
         heading: "稼働日とは",
@@ -1891,6 +1916,11 @@ export const guides: Guide[] = [
       "ファイルサイズとは、画像・動画・PDF・アプリなどのデータ量を表す大きさのことです。",
       "KB・MB・GB・TBなどの単位で表され、保存容量やアップロード制限を確認するときによく使われます。",
     ],
+    featuredTool: {
+      href: "/tools/file-size-converter",
+      label: "B・KB・MB・GB・TBをまとめて換算する",
+      description: "1024基準で5つのファイルサイズ単位へ同時に換算できます。",
+    },
     sections: [
       {
         heading: "ファイルサイズとは",
@@ -3346,8 +3376,13 @@ export const guides: Guide[] = [
     categoryLabel: "日付・時間・営業日",
     lead: [
       "営業日とは、会社や銀行などが通常どおり業務を行っている日のことです。一般的には土曜日・日曜日・祝日を除いた日を指しますが、業種や会社によって定義が異なる場合があります。",
-      "営業日数を確認したい場合は、当サイトの営業日カウントを使えば、期間を指定して簡単に計算できます。",
+      "このページでは営業日・平日・稼働日の意味の違いを整理します。期限表現の数え方は「○営業日以内」、前後の日付の数え方は「稼働日とは？」のガイドで確認できます。",
     ],
+    featuredTool: {
+      href: "/tools/working-days-count",
+      label: "土日祝を除いた営業日数を計算する",
+      description: "開始日と終了日を指定して、期間内の営業日数を確認できます。",
+    },
     sections: [
       {
         heading: "営業日とは",
@@ -4348,6 +4383,11 @@ export const guides: Guide[] = [
       "作業時間、動画の長さ、勤務時間、調理時間など、日常のさまざまな場面で使われます。",
       "時間をすばやく換算したい場合は、当サイトの秒⇄分⇄時間変換をご利用ください。",
     ],
+    featuredTool: {
+      href: "/tools/time-unit-converter",
+      label: "秒・分・時間・日をまとめて換算する",
+      description: "数値と単位を入力すると、5つの時間単位へ同時に換算できます。",
+    },
     sections: [
       {
         heading: "時間の単位とは",

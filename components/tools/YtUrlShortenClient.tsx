@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
 import { getYouTubeVideoId } from "@/lib/youtubeUtils"
 
 export default function YtUrlShortenClient() {
   const [url, setUrl] = useState("")
+  const [copied, setCopied] = useState(false)
 
   const shortened = useMemo(() => {
     if (!url) return ""
@@ -19,14 +20,16 @@ export default function YtUrlShortenClient() {
   return (
     <div className="mx-auto w-full max-w-xl space-y-6">
       <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <label className="mb-2 block text-sm font-bold text-neutral-700 italic">長いYouTube URLを入力</label>
-        <input 
+        <label htmlFor="youtube-url" className="mb-2 block text-sm font-bold text-neutral-700">YouTube動画URL</label>
+        <input
+          id="youtube-url"
           type="text" 
           value={url} 
           onChange={e => setUrl(e.target.value)}
           placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=1s..."
-          className="w-full rounded border border-neutral-300 p-3 font-mono text-sm outline-none focus:border-blue-500"
+          className="w-full rounded border border-neutral-300 p-3 font-mono text-sm outline-none focus:border-amber-700"
         />
+        <p className="mt-2 text-xs leading-5 text-neutral-500">通常URL・youtu.be・埋め込み・Shorts・ライブURLに対応しています。</p>
       </div>
 
       {url && shortened && shortened !== "無効なURLです" && (
@@ -35,11 +38,15 @@ export default function YtUrlShortenClient() {
           <div className="mb-6 select-all break-all font-mono text-xl font-black text-emerald-600 bg-emerald-50 p-4 rounded-lg">
             {shortened}
           </div>
-          <button 
-            onClick={() => navigator.clipboard.writeText(shortened)}
-            className="rounded-full bg-emerald-600 px-8 py-2 text-sm font-bold text-white hover:bg-emerald-700 transition-colors"
+          <button
+            onClick={async () => {
+              await navigator.clipboard.writeText(shortened)
+              setCopied(true)
+              window.setTimeout(() => setCopied(false), 1600)
+            }}
+            className="rounded-full bg-amber-800 px-8 py-2 text-sm font-bold text-white transition-colors hover:bg-amber-900"
           >
-            コピーする
+            {copied ? "コピーしました" : "URLをコピー"}
           </button>
         </div>
       )}

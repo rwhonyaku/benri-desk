@@ -1,3 +1,15 @@
+const videoIdPattern = /^[a-zA-Z0-9_-]{11}$/
+const playlistIdPattern = /^[a-zA-Z0-9_-]+$/
+
+function validVideoId(value: string | null | undefined) {
+  return value && videoIdPattern.test(value) ? value : ""
+}
+
+function isYouTubeHost(hostname: string) {
+  const host = hostname.replace(/^www\./, "")
+  return host === "youtube.com" || host === "m.youtube.com" || host === "music.youtube.com"
+}
+
 export function getYouTubeVideoId(input: string) {
   const text = input.trim()
   if (!text) return ""
@@ -7,13 +19,13 @@ export function getYouTubeVideoId(input: string) {
     const host = url.hostname.replace(/^www\./, "")
 
     if (host === "youtu.be") {
-      return url.pathname.split("/").filter(Boolean)[0] ?? ""
+      return validVideoId(url.pathname.split("/").filter(Boolean)[0])
     }
 
-    if (host === "youtube.com" || host === "m.youtube.com" || host === "music.youtube.com") {
-      if (url.pathname === "/watch") return url.searchParams.get("v") ?? ""
+    if (isYouTubeHost(url.hostname)) {
+      if (url.pathname === "/watch") return validVideoId(url.searchParams.get("v"))
       const parts = url.pathname.split("/").filter(Boolean)
-      if (["embed", "shorts", "live"].includes(parts[0])) return parts[1] ?? ""
+      if (["embed", "shorts", "live"].includes(parts[0])) return validVideoId(parts[1])
     }
   } catch {
     const match = text.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/)
@@ -29,7 +41,9 @@ export function getYouTubePlaylistId(input: string) {
 
   try {
     const url = new URL(text)
-    return url.searchParams.get("list") ?? ""
+    if (!isYouTubeHost(url.hostname)) return ""
+    const playlistId = url.searchParams.get("list")
+    return playlistId && playlistIdPattern.test(playlistId) ? playlistId : ""
   } catch {
     const match = text.match(/[?&]list=([a-zA-Z0-9_-]+)/)
     return match?.[1] ?? ""

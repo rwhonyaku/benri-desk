@@ -144,8 +144,8 @@ export const tools: Tool[] = [
     descriptionJa: "土日祝を除いた営業日数を計算します。", 
     introLines: [
       "開始日と終了日から、土日祝を除いた営業日数だけを数えるツールです。",
+      "開始日と終了日の両方を期間に含め、月曜日から金曜日のうち日本の祝日ではない日を数えます。",
       "納期確認、申請処理の目安、社内スケジュール調整で使えます。",
-      "たとえば4月1日から4月10日までの実働日数を知りたいときに便利です。",
     ],
     category: "date", 
     relatedSlugs: ["next-business-day", "payment-due-date", "bank-business-day"],
@@ -415,8 +415,30 @@ export const tools: Tool[] = [
     category: "calc",
     relatedSlugs: ["time-unit-converter", "file-size-converter"],
   },
-  { slug: "time-unit-converter", titleJa: "秒⇄分⇄時間変換", descriptionJa: "時間の単位を細かく換算します。", category: "calc", relatedSlugs: ["unit-converter"] },
-  { slug: "file-size-converter", titleJa: "ファイルサイズ換算", descriptionJa: "KB/MB/GBの単位を変換します。", category: "calc", relatedSlugs: ["unit-converter"] },
+  {
+    slug: "time-unit-converter",
+    titleJa: "秒⇄分⇄時間変換",
+    pageTitleJa: "秒・分・時間の変換｜日・週間もまとめて換算",
+    descriptionJa: "入力した時間を、秒・分・時間・日・週間へ同時に換算します。",
+    introLines: [
+      "数値と元の単位を選ぶと、秒・分・時間・日・週間の換算結果を一度に確認できます。",
+      "90分を時間に直す、2.5時間を分に直すなど、小数を含む時間換算にも使えます。",
+    ],
+    category: "calc",
+    relatedSlugs: ["unit-converter", "file-size-converter", "simple-timer"],
+  },
+  {
+    slug: "file-size-converter",
+    titleJa: "ファイルサイズ換算",
+    pageTitleJa: "ファイルサイズ換算｜B・KB・MB・GB・TBを変換",
+    descriptionJa: "入力した容量をB・KB・MB・GB・TBへまとめて換算します。",
+    introLines: [
+      "数値と元の単位を選ぶと、B・KB・MB・GB・TBの換算結果を一度に確認できます。",
+      "このツールは1KB = 1024Bとして計算します。ストレージ製品の1000基準とは表示が異なる場合があります。",
+    ],
+    category: "calc",
+    relatedSlugs: ["unit-converter", "time-unit-converter"],
+  },
   { slug: "discount-calc", titleJa: "割引率計算", descriptionJa: "〇％OFFの価格を計算します。", category: "calc", relatedSlugs: ["percentage-diff"] },
   { slug: "percentage-diff", titleJa: "パーセンテージ差分計算", descriptionJa: "増減率（前年比など）を算出します。", category: "calc", relatedSlugs: ["tax-calc"] },
 
@@ -455,8 +477,30 @@ export const tools: Tool[] = [
 
   // ⑧ YouTube補助
   { slug: "yt-thumb-download", titleJa: "YouTubeサムネイル取得", descriptionJa: "動画URLからサムネイル画像を抽出します。", category: "youtube", relatedSlugs: ["yt-video-id", "yt-url-shorten", "yt-embed-gen"] },
-  { slug: "yt-url-shorten", titleJa: "YouTube URL短縮", descriptionJa: "長いURLを短い形式に整えます。", category: "youtube", relatedSlugs: ["yt-video-id", "yt-timestamp-generator", "yt-embed-gen"] },
-  { slug: "yt-video-id", titleJa: "YouTube動画ID確認", descriptionJa: "URLから動画固有のIDを抽出します。", category: "youtube", relatedSlugs: ["yt-url-shorten", "yt-thumb-download", "yt-channel-id"] },
+  {
+    slug: "yt-url-shorten",
+    titleJa: "YouTube URL短縮",
+    pageTitleJa: "YouTube URL短縮｜youtu.be形式に変換",
+    descriptionJa: "YouTube動画URLを、共有しやすいyoutu.be形式に整えます。",
+    introLines: [
+      "通常URL・短縮URL・埋め込みURLから動画IDを取り出し、youtu.be形式の短いURLを作ります。",
+      "入力したURLの時刻指定や再生リスト情報などの追加パラメータは、短縮後のURLには引き継ぎません。",
+    ],
+    category: "youtube",
+    relatedSlugs: ["yt-video-id", "yt-timestamp-generator", "yt-embed-gen"],
+  },
+  {
+    slug: "yt-video-id",
+    titleJa: "YouTube動画ID確認",
+    pageTitleJa: "YouTube動画ID確認｜URLからvideo IDを抽出",
+    descriptionJa: "通常URL・短縮URL・埋め込みURLから動画IDを取り出します。",
+    introLines: [
+      "YouTube動画のURLを入力すると、URL内の11文字の動画IDだけを表示します。",
+      "埋め込み設定やサムネイル確認で、動画IDだけが必要なときに使えます。",
+    ],
+    category: "youtube",
+    relatedSlugs: ["yt-url-shorten", "yt-playlist-id", "yt-embed-gen"],
+  },
   { slug: "yt-embed-gen", titleJa: "YouTube埋め込みコード生成", descriptionJa: "ブログ等に貼る埋め込み用HTMLを作成します。", category: "youtube", relatedSlugs: ["yt-video-id", "yt-thumb-download", "yt-timestamp-generator"] },
   {
     slug: "yt-timestamp-generator",

@@ -148,6 +148,10 @@ export default function GuidePageFrame({ guide }: { guide: Guide }) {
           <Link href="/guides" className="text-neutral-500 transition-colors hover:text-neutral-900">
             ガイド
           </Link>
+          <span className="text-neutral-300">/</span>
+          <Link href={guide.categoryHref} className="text-neutral-500 transition-colors hover:text-neutral-900">
+            {guide.categoryLabel}
+          </Link>
         </nav>
 
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">
@@ -163,9 +167,9 @@ export default function GuidePageFrame({ guide }: { guide: Guide }) {
         {guide.featuredTool && (
           <GuideCardLink
             item={guide.featuredTool}
-            className="group mt-7 block rounded-xl border border-blue-200 bg-blue-50/60 p-5 transition-colors hover:border-blue-400"
+            className="group mt-7 block rounded-xl border border-amber-300 bg-amber-50/70 p-5 transition-colors hover:border-amber-600"
           >
-            <div className="text-sm font-bold text-blue-700 group-hover:text-blue-800">
+            <div className="text-sm font-bold text-amber-900 group-hover:text-amber-950">
               {guide.featuredTool.label} →
             </div>
             {guide.featuredTool.description && (

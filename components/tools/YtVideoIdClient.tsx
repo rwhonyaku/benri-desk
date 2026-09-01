@@ -5,6 +5,7 @@ import { getYouTubeVideoId } from "@/lib/youtubeUtils"
 
 export default function YtVideoIdClient() {
   const [url, setUrl] = useState("")
+  const [copied, setCopied] = useState(false)
 
   const videoId = useMemo(() => {
     if (!url) return ""
@@ -14,14 +15,16 @@ export default function YtVideoIdClient() {
   return (
     <div className="mx-auto w-full max-w-xl space-y-6">
       <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <label className="mb-2 block text-sm font-bold italic text-neutral-700">YouTubeのURLを入力</label>
+        <label htmlFor="youtube-video-id-url" className="mb-2 block text-sm font-bold text-neutral-700">YouTube動画URL</label>
         <input
+          id="youtube-video-id-url"
           type="text"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://www.youtube.com/watch?v=..."
-          className="w-full rounded border border-neutral-300 p-3 font-mono text-sm outline-none focus:border-blue-500"
+          className="w-full rounded border border-neutral-300 p-3 font-mono text-sm outline-none focus:border-amber-700"
         />
+        <p className="mt-2 text-xs leading-5 text-neutral-500">通常URL・youtu.be・埋め込み・Shorts・ライブURLに対応しています。</p>
       </div>
 
       {url && (
@@ -35,8 +38,15 @@ export default function YtVideoIdClient() {
             {videoId}
           </div>
           {videoId !== "取得できませんでした" && (
-            <button onClick={() => navigator.clipboard.writeText(videoId)} className="mt-6 text-xs font-bold text-blue-600 hover:underline">
-              IDをコピーする
+            <button
+              onClick={async () => {
+                await navigator.clipboard.writeText(videoId)
+                setCopied(true)
+                window.setTimeout(() => setCopied(false), 1600)
+              }}
+              className="mt-6 text-xs font-bold text-amber-800 hover:underline"
+            >
+              {copied ? "コピーしました" : "IDをコピー"}
             </button>
           )}
         </div>
