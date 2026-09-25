@@ -1,16 +1,32 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { isJpHoliday } from "@/lib/jpHolidays"
+import {
+  getJpHolidayDataStatus,
+  isJpHoliday,
+  JP_HOLIDAY_END_YEAR,
+  JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
+  JP_HOLIDAY_START_YEAR,
+} from "@/lib/jpHolidays"
+import { addDays, parseISODate, todayISOInJapan, ymdToISO } from "@/lib/businessDayUtils"
+
+const DEFAULT_START = todayISOInJapan()
+const DEFAULT_END = ymdToISO(addDays(parseISODate(DEFAULT_START)!, 7))
 
 export default function WorkingDaysCountClient() {
-  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0])
-  const [endDate, setEndDate] = useState(
-    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
-  )
+  const [startDate, setStartDate] = useState(DEFAULT_START)
+  const [endDate, setEndDate] = useState(DEFAULT_END)
 
   const stats = useMemo(() => {
     if (!startDate || !endDate) return null
+
+    const startYear = Number(startDate.slice(0, 4))
+    const endYear = Number(endDate.slice(0, 4))
+    const firstYear = Math.min(startYear, endYear)
+    const lastYear = Math.max(startYear, endYear)
+    if (getJpHolidayDataStatus(firstYear) === "unsupported" || getJpHolidayDataStatus(lastYear) === "unsupported") {
+      return { unsupported: true as const }
+    }
 
     let start = new Date(startDate)
     let end = new Date(endDate)
@@ -46,7 +62,14 @@ export default function WorkingDaysCountClient() {
       current.setDate(current.getDate() + 1)
     }
 
-    return { totalDays, workingDays, nonWorkingDays, isReversed }
+    return {
+      unsupported: false as const,
+      totalDays,
+      workingDays,
+      nonWorkingDays,
+      isReversed,
+      projected: lastYear > JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
+    }
   }, [startDate, endDate])
 
   return (
@@ -57,6 +80,8 @@ export default function WorkingDaysCountClient() {
             <label className="mb-1 block text-xs font-bold uppercase text-neutral-400">開始日</label>
             <input
               type="date"
+              min={`${JP_HOLIDAY_START_YEAR}-01-01`}
+              max={`${JP_HOLIDAY_END_YEAR}-12-31`}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               className="w-full rounded border border-neutral-300 p-2 font-bold outline-none focus:border-blue-500"
@@ -66,6 +91,8 @@ export default function WorkingDaysCountClient() {
             <label className="mb-1 block text-xs font-bold uppercase text-neutral-400">終了日</label>
             <input
               type="date"
+              min={`${JP_HOLIDAY_START_YEAR}-01-01`}
+              max={`${JP_HOLIDAY_END_YEAR}-12-31`}
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               className="w-full rounded border border-neutral-300 p-2 font-bold outline-none focus:border-blue-500"
@@ -74,7 +101,13 @@ export default function WorkingDaysCountClient() {
         </div>
       </div>
 
-      {stats && (
+      {stats?.unsupported && (
+        <p className="rounded-lg bg-amber-50 p-4 text-center text-sm font-bold text-amber-900">
+          営業日計算は{JP_HOLIDAY_START_YEAR}年から{JP_HOLIDAY_END_YEAR}年までに対応しています。
+        </p>
+      )}
+
+      {stats && !stats.unsupported && (
         <div className="grid grid-cols-1 gap-4">
           <div className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-8 text-center shadow-sm">
             <div className="mb-1 text-sm font-bold uppercase tracking-widest text-blue-500">
@@ -100,6 +133,11 @@ export default function WorkingDaysCountClient() {
           {stats.isReversed && (
             <p className="text-center text-[10px] font-bold italic text-rose-500">
               ※開始日と終了日が逆転しています。期間として計算しました。
+            </p>
+          )}
+          {stats.projected && (
+            <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center text-xs leading-5 text-amber-900">
+              {JP_HOLIDAY_OFFICIAL_THROUGH_YEAR + 1}年以降の祝日は、現行法と暦計算に基づく暫定値です。重要な期限は公表後に再確認してください。
             </p>
           )}
         </div>

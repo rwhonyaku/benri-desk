@@ -10,13 +10,22 @@ import {
   todayISOInJapan,
   ymdToISO,
 } from "@/lib/businessDayUtils"
+import {
+  getJpHolidayDataStatus,
+  JP_HOLIDAY_END_YEAR,
+  JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
+  JP_HOLIDAY_START_YEAR,
+} from "@/lib/jpHolidays"
 
 type AdjustMode = "next" | "previous" | "none"
 
 function adjustBusinessDay(dateStr: string, mode: AdjustMode) {
   const base = parseISODate(dateStr)
+  if (base && getJpHolidayDataStatus(base.y) === "unsupported") {
+    return { date: null, adjustedDays: 0, unsupported: true as const }
+  }
   if (!base || mode === "none" || isBusinessDay(base)) {
-    return { date: base, adjustedDays: 0 }
+    return { date: base, adjustedDays: 0, unsupported: false as const }
   }
 
   const step = mode === "next" ? 1 : -1
@@ -26,9 +35,12 @@ function adjustBusinessDay(dateStr: string, mode: AdjustMode) {
   while (!isBusinessDay(current)) {
     current = addDays(current, step)
     adjustedDays += step
+    if (getJpHolidayDataStatus(current.y) === "unsupported") {
+      return { date: null, adjustedDays, unsupported: true as const }
+    }
   }
 
-  return { date: current, adjustedDays }
+  return { date: current, adjustedDays, unsupported: false as const }
 }
 
 export default function PaymentDueDateClient() {
@@ -40,13 +52,16 @@ export default function PaymentDueDateClient() {
   const result = useMemo(() => {
     const base = parseISODate(baseDate)
     if (!base) return null
+    if (getJpHolidayDataStatus(base.y) === "unsupported") return { unsupported: true as const }
 
     const raw = addDays(base, termDays)
     const rawISO = ymdToISO(raw)
     const adjusted = adjustBusinessDay(rawISO, adjustMode)
+    if (adjusted.unsupported) return { unsupported: true as const }
     if (!adjusted.date) return null
 
     return {
+      unsupported: false as const,
       raw,
       rawISO,
       rawWeekday: getWeekdayName(raw),
@@ -55,6 +70,7 @@ export default function PaymentDueDateClient() {
       adjustedISO: ymdToISO(adjusted.date),
       adjustedWeekday: getWeekdayName(adjusted.date),
       adjustedDays: adjusted.adjustedDays,
+      projected: adjusted.date.y > JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
     }
   }, [baseDate, termDays, adjustMode])
 
@@ -65,6 +81,8 @@ export default function PaymentDueDateClient() {
           <label className="mb-2 block text-sm font-bold italic text-neutral-700">基準日</label>
           <input
             type="date"
+            min={`${JP_HOLIDAY_START_YEAR}-01-01`}
+            max={`${JP_HOLIDAY_END_YEAR}-12-31`}
             value={baseDate}
             onChange={(e) => setBaseDate(e.target.value)}
             className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-lg font-semibold outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50"
@@ -97,7 +115,13 @@ export default function PaymentDueDateClient() {
         </div>
       </div>
 
-      {result && (
+      {result?.unsupported && (
+        <p className="rounded-lg bg-amber-50 p-4 text-center text-sm font-bold text-amber-900">
+          支払期日計算は{JP_HOLIDAY_START_YEAR}年から{JP_HOLIDAY_END_YEAR}年までに対応しています。
+        </p>
+      )}
+
+      {result && !result.unsupported && (
         <div className="space-y-4">
           <div className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-8 text-center shadow-sm">
             <div className="mb-2 text-sm font-bold tracking-widest text-blue-500">支払期日</div>
@@ -117,6 +141,11 @@ export default function PaymentDueDateClient() {
             調整前：{result.raw.y}年{result.raw.m}月{result.raw.d}日 ({result.rawWeekday})
             {result.rawReasons.length > 0 && `：${result.rawReasons.join("、")}`}
           </div>
+          {result.projected && (
+            <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center text-xs leading-5 text-amber-900">
+              {JP_HOLIDAY_OFFICIAL_THROUGH_YEAR + 1}年以降の祝日は暫定値です。重要な支払期日は正式公表後に再確認してください。
+            </p>
+          )}
         </div>
       )}
     </div>

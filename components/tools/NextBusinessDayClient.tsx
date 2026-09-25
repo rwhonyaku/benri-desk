@@ -10,32 +10,44 @@ import {
   todayISOInJapan,
   ymdToISO,
 } from "@/lib/businessDayUtils"
+import {
+  getJpHolidayDataStatus,
+  JP_HOLIDAY_END_YEAR,
+  JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
+  JP_HOLIDAY_START_YEAR,
+} from "@/lib/jpHolidays"
+
+function calculateNextBusinessDay(dateStr: string, includeStart: boolean) {
+  const start = parseISODate(dateStr)
+  if (!start) return null
+  if (getJpHolidayDataStatus(start.y) === "unsupported") return { unsupported: true as const }
+
+  let current = includeStart ? start : addDays(start, 1)
+  let movedDays = includeStart ? 0 : 1
+
+  while (!isBusinessDay(current)) {
+    current = addDays(current, 1)
+    movedDays++
+    if (getJpHolidayDataStatus(current.y) === "unsupported") return { unsupported: true as const }
+  }
+
+  return {
+    unsupported: false as const,
+    date: current,
+    iso: ymdToISO(current),
+    weekday: getWeekdayName(current),
+    movedDays,
+    startReasons: getBusinessDayReason(start),
+    projected: current.y > JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
+  }
+}
 
 export default function NextBusinessDayClient() {
   const todayISO = useMemo(() => todayISOInJapan(), [])
   const [dateStr, setDateStr] = useState(todayISO)
   const [includeStart, setIncludeStart] = useState(false)
 
-  const result = useMemo(() => {
-    const start = parseISODate(dateStr)
-    if (!start) return null
-
-    let current = includeStart ? start : addDays(start, 1)
-    let movedDays = includeStart ? 0 : 1
-
-    while (!isBusinessDay(current)) {
-      current = addDays(current, 1)
-      movedDays++
-    }
-
-    return {
-      date: current,
-      iso: ymdToISO(current),
-      weekday: getWeekdayName(current),
-      movedDays,
-      startReasons: getBusinessDayReason(start),
-    }
-  }, [dateStr, includeStart])
+  const result = calculateNextBusinessDay(dateStr, includeStart)
 
   return (
     <div className="mx-auto w-full max-w-xl space-y-6">
@@ -53,6 +65,8 @@ export default function NextBusinessDayClient() {
 
           <input
             type="date"
+            min={`${JP_HOLIDAY_START_YEAR}-01-01`}
+            max={`${JP_HOLIDAY_END_YEAR}-12-31`}
             value={dateStr}
             onChange={(e) => setDateStr(e.target.value)}
             className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-xl font-semibold text-neutral-900 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50"
@@ -70,7 +84,13 @@ export default function NextBusinessDayClient() {
         </label>
       </div>
 
-      {result && (
+      {result?.unsupported && (
+        <p className="rounded-lg bg-amber-50 p-4 text-center text-sm font-bold text-amber-900">
+          翌営業日計算は{JP_HOLIDAY_START_YEAR}年から{JP_HOLIDAY_END_YEAR}年までに対応しています。
+        </p>
+      )}
+
+      {result && !result.unsupported && (
         <div className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-8 text-center shadow-sm">
           <div className="mb-2 text-sm font-bold tracking-widest text-blue-500">次の営業日</div>
           <div className="text-4xl font-black text-blue-700">
@@ -88,6 +108,11 @@ export default function NextBusinessDayClient() {
                 </span>
               ))}
             </div>
+          )}
+          {result.projected && (
+            <p className="mt-4 text-xs leading-5 text-amber-800">
+              {JP_HOLIDAY_OFFICIAL_THROUGH_YEAR + 1}年以降の祝日は暫定値です。正式公表後に再確認してください。
+            </p>
           )}
         </div>
       )}

@@ -3,7 +3,44 @@
 // Covers: fixed holidays, Happy Monday, equinoxes, substitute holidays, citizen’s holidays,
 // and 2020/2021 special moves (Olympics).
 
+export const JP_HOLIDAY_START_YEAR = 2020
+export const JP_HOLIDAY_OFFICIAL_THROUGH_YEAR = 2027
+export const JP_HOLIDAY_END_YEAR = 2035
+export const JP_HOLIDAY_SOURCE_URL = "https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html"
+
+export type JpHolidayDataStatus = "official" | "projected" | "unsupported"
+
 export type YMD = { y: number; m: number; d: number }
+
+const officialUpcomingHolidays: Record<number, [string, string][]> = {
+  2026: [
+    ["2026-01-01", "元日"], ["2026-01-12", "成人の日"],
+    ["2026-02-11", "建国記念の日"], ["2026-02-23", "天皇誕生日"],
+    ["2026-03-20", "春分の日"], ["2026-04-29", "昭和の日"],
+    ["2026-05-03", "憲法記念日"], ["2026-05-04", "みどりの日"],
+    ["2026-05-05", "こどもの日"], ["2026-05-06", "振替休日"],
+    ["2026-07-20", "海の日"], ["2026-08-11", "山の日"],
+    ["2026-09-21", "敬老の日"], ["2026-09-22", "国民の休日"],
+    ["2026-09-23", "秋分の日"], ["2026-10-12", "スポーツの日"],
+    ["2026-11-03", "文化の日"], ["2026-11-23", "勤労感謝の日"],
+  ],
+  2027: [
+    ["2027-01-01", "元日"], ["2027-01-11", "成人の日"],
+    ["2027-02-11", "建国記念の日"], ["2027-02-23", "天皇誕生日"],
+    ["2027-03-21", "春分の日"], ["2027-03-22", "振替休日"],
+    ["2027-04-29", "昭和の日"], ["2027-05-03", "憲法記念日"],
+    ["2027-05-04", "みどりの日"], ["2027-05-05", "こどもの日"],
+    ["2027-07-19", "海の日"], ["2027-08-11", "山の日"],
+    ["2027-09-20", "敬老の日"], ["2027-09-23", "秋分の日"],
+    ["2027-10-11", "スポーツの日"], ["2027-11-03", "文化の日"],
+    ["2027-11-23", "勤労感謝の日"],
+  ],
+}
+
+export function getJpHolidayDataStatus(year: number): JpHolidayDataStatus {
+  if (year < JP_HOLIDAY_START_YEAR || year > JP_HOLIDAY_END_YEAR) return "unsupported"
+  return year <= JP_HOLIDAY_OFFICIAL_THROUGH_YEAR ? "official" : "projected"
+}
 
 function pad2(n: number) {
   return String(n).padStart(2, "0")
@@ -151,7 +188,12 @@ function applySubstituteAndCitizens(year: number, base: Map<string, string>): Ma
 }
 
 export function getJpHolidayName(ymd: YMD): string | null {
-  if (ymd.y < 2020 || ymd.y > 2035) return null
+  if (getJpHolidayDataStatus(ymd.y) === "unsupported") return null
+
+  const official = officialUpcomingHolidays[ymd.y]
+  if (official) {
+    return new Map(official).get(ymdToKey(ymd)) ?? null
+  }
 
   const base = baseHolidaysForYear(ymd.y)
   const full = applySubstituteAndCitizens(ymd.y, base)
@@ -163,7 +205,12 @@ export function isJpHoliday(ymd: YMD) {
 }
 
 export function getJpHolidaysForYear(year: number) {
-  if (year < 2020 || year > 2035) return []
+  if (getJpHolidayDataStatus(year) === "unsupported") return []
+
+  const official = officialUpcomingHolidays[year]
+  if (official) {
+    return official.map(([date, name]) => ({ date, name }))
+  }
 
   const base = baseHolidaysForYear(year)
   const full = applySubstituteAndCitizens(year, base)

@@ -1,7 +1,14 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { getJpHolidayName, type YMD } from "@/lib/jpHolidays"
+import {
+  getJpHolidayDataStatus,
+  getJpHolidayName,
+  JP_HOLIDAY_END_YEAR,
+  JP_HOLIDAY_OFFICIAL_THROUGH_YEAR,
+  JP_HOLIDAY_START_YEAR,
+  type YMD,
+} from "@/lib/jpHolidays"
 
 function pad2(n: number) {
   return String(n).padStart(2, "0")
@@ -44,6 +51,8 @@ export default function BankBusinessDayClient() {
   const result = useMemo(() => {
     const ymd = parseISODate(dateStr)
     if (!ymd) return null
+    const status = getJpHolidayDataStatus(ymd.y)
+    if (status === "unsupported") return { unsupported: true as const }
 
     const weekday = getWeekdayName(ymd)
     const holidayName = getJpHolidayName(ymd)
@@ -57,7 +66,7 @@ export default function BankBusinessDayClient() {
 
     const isOpen = reasons.length === 0
 
-    return { ymd, weekday, isOpen, reasons }
+    return { unsupported: false as const, ymd, weekday, isOpen, reasons, projected: status === "projected" }
   }, [dateStr])
 
   return (
@@ -75,6 +84,8 @@ export default function BankBusinessDayClient() {
 
         <input
           type="date"
+          min={`${JP_HOLIDAY_START_YEAR}-01-01`}
+          max={`${JP_HOLIDAY_END_YEAR}-12-31`}
           className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-xl font-semibold text-neutral-900 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50"
           value={dateStr}
           onChange={(e) => setDateStr(e.target.value)}
@@ -96,7 +107,13 @@ export default function BankBusinessDayClient() {
         </div>
       </div>
 
-      {result && (
+      {result?.unsupported && (
+        <p className="rounded-lg bg-amber-50 p-4 text-center text-sm font-bold text-amber-900">
+          銀行営業日の確認は{JP_HOLIDAY_START_YEAR}年から{JP_HOLIDAY_END_YEAR}年までに対応しています。
+        </p>
+      )}
+
+      {result && !result.unsupported && (
         <div
           className={`rounded-2xl border-2 p-8 text-center transition-all ${
             result.isOpen
@@ -123,8 +140,21 @@ export default function BankBusinessDayClient() {
           )}
 
           <div className="mt-6 text-xs text-neutral-400">
-            ※窓口営業時間の判定です。ATMやネットバンキングは別途稼働状況をご確認ください。
+            ※銀行法令上の休日をもとにした窓口営業日の目安です。店舗独自の休日、ATM、ネットバンキングは各金融機関でご確認ください。
+            <a
+              href="https://www.fsa.go.jp/access/30/182a.html"
+              target="_blank"
+              rel="noreferrer"
+              className="ml-1 font-bold underline underline-offset-2"
+            >
+              金融庁の案内
+            </a>
           </div>
+          {result.projected && (
+            <div className="mt-3 text-xs leading-5 text-amber-800">
+              ※{JP_HOLIDAY_OFFICIAL_THROUGH_YEAR + 1}年以降の祝日は暫定値です。正式公表後に再確認してください。
+            </div>
+          )}
         </div>
       )}
     </div>
